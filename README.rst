@@ -1,3 +1,43 @@
+awesome
+=======
+
+my awesome configs and themes
+
+Licensed under GNU General Public License v2 
+      * (c) 2014, phelipe26 
+This is a fork based on the copycat-killer repo mentioned in the credits below.
+I have been using several widgets and bits and pieces of themes.
+
+Credits:
+[[Power themes for Awesome WM 3.5+
+Author: 	Luke Bonham <dada [at] archlinux [dot] info>
+Version: 	2.0-git
+License: 	BY-NC-SA
+Source: 	https://github.com/copycat-killer/awesome-copycats]]  
+
+[[Lain
+:Author: Luke Bonham <dada [at] archlinux [dot] info>
+:Version: git
+:License: GNU-GPLv2_
+:Source: https://github.com/copycat-killer/lain]]
+
+[[Calendar Widget
+ Licensed under GNU General Public License v2 
+	  * (c) 2013, Luke Bonham    ]]
+ 
+ [[alsa widget
+    Licensed under GNU General Public License v2 
+      * (c) 2013, Luke Bonham                     
+      * (c) 2010, Adrian C. <anrxc@sysphere.org>  ]]
+
+[[battery widget
+Licensed under GNU General Public License v2 
+      * (c) 2013,      Luke Bonham                
+      * (c) 2010-2012, Peter Hofmann  ]]      
+
+    
+
+
 ===================
 Awesome WM Copycats
 ===================
