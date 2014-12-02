@@ -401,14 +401,16 @@ for s = 1, screen.count() do
 --    if s == 1 then right_layout:add(wibox.widget.systray()) end
 
 -- user defined widgets
+	right_layout:add(arrl_pre)
 	right_layout:add(wibox.widget.systray())
+	right_layout:add(arrl_post)
 	right_layout:add(batwidget)
-	right_layout:add(baticon)
+--	right_layout:add(baticon)
 --	right_layout:add(volicon)
 	right_layout:add(alsawidget.bar)
 --	right_layout:add(volumewidget)
 --	right_layout:add(APW)
-	right_layout:add(clockicon)
+--	right_layout:add(clockicon)
 	right_layout:add(mytextclock)
 --	right_layout:add(mylayoutbox[s]) -- tiling vs floating options
 

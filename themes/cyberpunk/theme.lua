@@ -1,4 +1,4 @@
-﻿--------------------------
+﻿---------------------------
 -- Cyberpunk awesome theme --
 ---------------------------
 
@@ -14,7 +14,7 @@ theme.bg_normal						= "#0F0F0F" --#193535"  --#222222"
 theme.bg_focus						= "#0F0F0F"		--"#001414" --"#040404" --#535d6c"
 theme.bg_urgent						= "#ff0000"
 theme.bg_minimize					= "#0F0F0F"		--#0F2020"  --"#444444"
-theme.bg_systray					= theme.bg_normal
+theme.bg_systray					= "#1a1a1a"		--theme.bg_normal
 theme.fg_normal						= "#aaaaaa"
 theme.fg_focus						= "#7519FF"		--#57FEFF"  --#00FFFF"
 theme.fg_urgent						= "#ffffff"
