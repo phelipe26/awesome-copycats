@@ -139,7 +139,7 @@ markup      = lain.util.markup
 -- mytextclock = awful.widget.textclock()
 clockicon = wibox.widget.imagebox(beautiful.widget_clock)
 -- mytextclock = awful.widget.textclock(markup("#7788af", "%A %d %B ") .. markup("#343639", ">") .. markup("#00FFFF", " %H:%M ")) --de5e1e orange, %D: MM/DD/YYYY
-mytextclock = awful.widget.textclock(markup("#57FEFF", "%a %D ") .. markup("#57FEFF", "@") .. markup("#57FEFF", " %H:%M")) --de5e1e orange %b/%d/%y for dec/01/14
+mytextclock = awful.widget.textclock(markup("#57FEFF", " %a %D ") .. markup("#57FEFF", "@") .. markup("#57FEFF", " %H:%M")) --de5e1e orange %b/%d/%y for dec/01/14
 
 -- Calendar
 lain.widgets.calendar:attach(mytextclock, { font_size = 7 })
