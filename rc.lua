@@ -9,7 +9,7 @@ local naughty 	= require("naughty")			-- Notification library
 local menubar 	= require("menubar")
 
 -- {{{ User-defined libraries
- local APW 		= require("apw/widget")		-- Volume indicator
+local APW 		= require("apw/widget")		-- Volume indicator
 local lain 		= require("lain")
 vicious			= require("vicious")
 -- }}}
@@ -39,12 +39,12 @@ end
 
 -- {{{ Run applications once on startup
 function run_once(cmd)
-  findme = cmd
-  firstspace = cmd:find(" ")
-  if firstspace then
-    findme = cmd:sub(0, firstspace-1)
-  end
-  awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
+   findme = cmd
+   firstspace = cmd:find(" ")
+   if firstspace then
+      findme = cmd:sub(0, firstspace-1)
+   end
+   awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
 end
 -- }}}
 
@@ -94,9 +94,9 @@ end
 -- }}}
 
 -- {{{ Tags /// changes the name and layout per tag
-	tags 	= {
-		names	= { 	"home", 	"web", 		"cmd", 		"office", 	"im"		}, -- for now 5 tags is sufficient, more can be added
-		layout	= { 	layouts[2], 	layouts[10], 	layouts[2], 	layouts[2], 	layouts[2]	}
+tags 	= {
+   names	= { 	"home", "web", "cmd", "im", "emacs", "office", "extra" }, -- for now 5 tags is sufficient, more can be added
+   layout	= { 	layouts[2], layouts[10], layouts[2], layouts[2], layouts[2], layouts[2], layouts[2]	}
 }
 for s = 1, screen.count() do
 	tags[s] = awful.tag(tags.names, s, tags.layout)
@@ -119,7 +119,7 @@ mymainmenu = awful.menu({ items = { 	{ "awesome", myawesomemenu, beautiful.aweso
 					{ "explorer", "nemo" },
                                 	{ "task manager", "lxtask" },
 					{ "spin down HDD", "hdparm -B 254 /dev/sda" }
---                                    { "firefox", "firefox" },
+					--{ "firefox", "firefox" },
 
 
                                   }
@@ -147,50 +147,50 @@ lain.widgets.calendar:attach(mytextclock, { font_size = 7 })
 -- Battery
 baticon = wibox.widget.imagebox(beautiful.widget_battery)
 batwidget = lain.widgets.bat({
-    settings = function()
-        if bat_now.perc == "N/A" then
-            widget:set_markup(" AC ")
-            baticon:set_image(beautiful.widget_ac)
-            return
-        elseif tonumber(bat_now.perc) <= 5 then
-            baticon:set_image(beautiful.widget_battery_empty)
-        elseif tonumber(bat_now.perc) <= 15 then
-            baticon:set_image(beautiful.widget_battery_low)
-        else
-            baticon:set_image(beautiful.widget_battery)
-        end
-        widget:set_markup(" " .. bat_now.perc .. "% ")
-    end
-})
+				settings = function()
+				   if bat_now.perc == "N/A" then
+				      widget:set_markup(" AC ")
+				      baticon:set_image(beautiful.widget_ac)
+				      return
+				   elseif tonumber(bat_now.perc) <= 5 then
+				      baticon:set_image(beautiful.widget_battery_empty)
+				   elseif tonumber(bat_now.perc) <= 15 then
+				      baticon:set_image(beautiful.widget_battery_low)
+				   else
+				      baticon:set_image(beautiful.widget_battery)
+				   end
+				   widget:set_markup(" " .. bat_now.perc .. "% ")
+				end
+			     })
 
 -- ALSA Volume Mixer
 
 local alsawidget =
-{
-	channel = "Master",
-	step = "2%",
-	colors =
-	{
-		unmute = "#57FEFF", -- AECF96",
-		mute = "#FF5656"
-	},
-	mixer = terminal .. " -e alsamixer", -- or whatever your preferred sound mixer is
-	notifications =
-	{
-		icons =
-		{
-			-- the first item is the 'muted' icon
-			"/usr/share/icons/gnome/48x48/status/audio-volume-muted.png",
-			-- the rest of the items correspond to intermediate volume levels - you can have as many as you want (but must be >= 1)
-			"/usr/share/icons/gnome/48x48/status/audio-volume-low.png",
-			"/usr/share/icons/gnome/48x48/status/audio-volume-medium.png",
-			"/usr/share/icons/gnome/48x48/status/audio-volume-high.png"
-		},
-		font = "Monospace 11", -- must be a monospace font for the bar to be sized consistently
-		icon_size = 48,
-		bar_size = 20 -- adjust to fit your font if the bar doesn't fit
-	}
-}
+   {
+      channel = "Master",
+      step = "2%",
+      colors =
+	 {
+	    unmute = "#57FEFF", -- AECF96",
+	    mute = "#FF5656"
+	 },
+      mixer = terminal .. " -e alsamixer", -- or whatever your preferred sound mixer is
+      notifications =
+	 {
+	    icons =
+	       {
+		  -- the first item is the 'muted' icon
+		  "/usr/share/icons/gnome/48x48/status/audio-volume-muted.png",
+		  -- the rest of the items correspond to intermediate volume levels - you can have as many as you want (but must be >= 1)
+		  "/usr/share/icons/gnome/48x48/status/audio-volume-low.png",
+		  "/usr/share/icons/gnome/48x48/status/audio-volume-medium.png",
+		  "/usr/share/icons/gnome/48x48/status/audio-volume-high.png"
+	       },
+	    font = "Monospace 11", -- must be a monospace font for the bar to be sized consistently
+	    icon_size = 48,
+	    bar_size = 20 -- adjust to fit your font if the bar doesn't fit
+	 }
+   }
 -- widget
 alsawidget.bar = awful.widget.progressbar ()
 alsawidget.bar:set_width (8)
@@ -198,22 +198,22 @@ alsawidget.bar:set_vertical (true)
 alsawidget.bar:set_background_color ("#494B4F")
 alsawidget.bar:set_color (alsawidget.colors.unmute)
 alsawidget.bar:buttons (awful.util.table.join (
-	awful.button ({}, 3, function()
-		awful.util.spawn ("pavucontrol", false)
-	end),
-	awful.button ({}, 1, function()
-		awful.util.spawn ("amixer sset " .. alsawidget.channel .. " toggle", false)
-		vicious.force ({ alsawidget.bar })
-	end),
-	awful.button ({}, 4, function()
-		awful.util.spawn ("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "+", false)
-		vicious.force ({ alsawidget.bar })
-	end),
-	awful.button ({}, 5, function()
-		awful.util.spawn ("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "-", false)
-		vicious.force ({ alsawidget.bar })
-	end)
-))
+			   awful.button ({}, 3, function()
+					    awful.util.spawn ("pavucontrol", false)
+						end),
+			   awful.button ({}, 1, function()
+					    awful.util.spawn ("amixer sset " .. alsawidget.channel .. " toggle", false)
+					    vicious.force ({ alsawidget.bar })
+						end),
+			   awful.button ({}, 4, function()
+					    awful.util.spawn ("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "+", false)
+					    vicious.force ({ alsawidget.bar })
+						end),
+			   awful.button ({}, 5, function()
+					    awful.util.spawn ("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "-", false)
+					    vicious.force ({ alsawidget.bar })
+						end)
+					      ))
 -- tooltip
 alsawidget.tooltip = awful.tooltip ({ objects = { alsawidget.bar } })
 -- naughty notifications
@@ -311,8 +311,12 @@ volumewidget = lain.widgets.alsa({
 --first = wibox.widget.textbox('<span font="cantarell 4"> </span>')
 arrl_pre = wibox.widget.imagebox()
 arrl_pre:set_image(beautiful.arrl_lr_pre)
+arrl_pre_light = wibox.widget.imagebox()
+arrl_pre_light:set_image(beautiful.arrl_lr_pre_light)
 arrl_post = wibox.widget.imagebox()
 arrl_post:set_image(beautiful.arrl_lr_post)
+arrl_post_light = wibox.widget.imagebox()
+arrl_post_light:set_image(beautiful.arrl_lr_post_light)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -387,32 +391,32 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
---	left_layout:add(first)
-	left_layout:add(mylauncher)
-	left_layout:add(mytaglist[s])
-	left_layout:add(mypromptbox[s])
-	left_layout:add(arrl_pre)
-	left_layout:add(mylayoutbox[s])
-	left_layout:add(arrl_post)
---	left_layout:add(first)
+    --	left_layout:add(first)
+    left_layout:add(mylauncher)
+    left_layout:add(mytaglist[s])
+    left_layout:add(mypromptbox[s])
+    left_layout:add(arrl_pre)
+    left_layout:add(mylayoutbox[s])
+    left_layout:add(arrl_post)
+    --	left_layout:add(first)
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
---    if s == 1 then right_layout:add(wibox.widget.systray()) end
+    --    if s == 1 then right_layout:add(wibox.widget.systray()) end
 
--- user defined widgets
-	right_layout:add(arrl_pre)
-	right_layout:add(wibox.widget.systray())
-	right_layout:add(arrl_post)
-	right_layout:add(batwidget)
---	right_layout:add(baticon)
---	right_layout:add(volicon)
-	right_layout:add(alsawidget.bar)
---	right_layout:add(volumewidget)
---	right_layout:add(APW)
---	right_layout:add(clockicon)
-	right_layout:add(mytextclock)
---	right_layout:add(mylayoutbox[s]) -- tiling vs floating options
+    -- user defined widgets
+    right_layout:add(arrl_pre_light)
+    right_layout:add(wibox.widget.systray())
+    right_layout:add(arrl_post_light)
+    right_layout:add(batwidget)
+    --	right_layout:add(baticon)
+    --	right_layout:add(volicon)
+    right_layout:add(alsawidget.bar)
+    --	right_layout:add(volumewidget)
+    --	right_layout:add(APW)
+    --	right_layout:add(clockicon)
+    right_layout:add(mytextclock)
+    --	right_layout:add(mylayoutbox[s]) -- tiling vs floating options
 
     -- Now bring it all together (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()
@@ -426,10 +430,10 @@ end
 
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
-))
+		awful.button({ }, 3, function () mymainmenu:toggle() end),
+		awful.button({ }, 4, awful.tag.viewnext),
+		awful.button({ }, 5, awful.tag.viewprev)
+				  ))
 -- }}}
 
 -- {{{ Key bindings
@@ -467,24 +471,24 @@ globalkeys = awful.util.table.join(
 --	awful.key({ }, "Print", function () awful.util.spawn("scrot -e 'mv $f ~/screenshots/ 2>/dev/null'") end),	--screenshot --not working
 
 
---awful.key({ }, "XF86AudioRaiseVolume", function() awful.util.spawn("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "+", false)
---awful.key({ }, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer set Master 2%+", false)
-	--vicious.force({ alsawidget.bar })
-	--alsawidget.notify()
---end),
---awful.key({ }, "XF86AudioLowerVolume", function() awful.util.spawn("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "-", false)
---awful.key({ }, "XF86AudioLowerVolume", function () awful.util.spawn("amixer set Master 2%-", false)
+	--awful.key({ }, "XF86AudioRaiseVolume", function() awful.util.spawn("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "+", false)
+	--awful.key({ }, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer set Master 2%+", false)
 	--vicious.force({ alsawidget.bar })
 	--alsawidget.notify()
 	--end),
---awful.key({ }, "XF86AudioMute", function() awful.util.spawn("amixer sset " .. alsawidget.channel .. " toggle", false)
---awful.key({ }, "XF86AudioMute", function () awful.util.spawn("amixer set Master toggle", false)
+	--awful.key({ }, "XF86AudioLowerVolume", function() awful.util.spawn("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "-", false)
+	--awful.key({ }, "XF86AudioLowerVolume", function () awful.util.spawn("amixer set Master 2%-", false)
+	--vicious.force({ alsawidget.bar })
+	--alsawidget.notify()
+	--end),
+	--awful.key({ }, "XF86AudioMute", function() awful.util.spawn("amixer sset " .. alsawidget.channel .. " toggle", false)
+	--awful.key({ }, "XF86AudioMute", function () awful.util.spawn("amixer set Master toggle", false)
 	-- The 2 following lines were needed at least on my configuration, otherwise it would get stuck muted
 	--awful.util.spawn("amixer sset " .. "Speaker" .. " unmute", false)
 	--awful.util.spawn("amixer sset " .. "Headphone" .. " unmute", false)
-    --vicious.force({ alsawidget.bar })
+	--vicious.force({ alsawidget.bar })
 	--alsawidget.notify()
---end),
+	--end),
 
 
     -- Layout manipulation
@@ -634,10 +638,10 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
-tit    -- Set Firefox to always map on tags number 2 of screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { tag = tags[1][2] } },
-}
+    -- Set Firefox to always map on tags number 2 of screen 1.
+    { rule = { class = "Firefox" },
+      properties = { tag = tags[1][2] } }
+   }
 -- }}}
 
 -- {{{ Signals
@@ -726,14 +730,14 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 -- {{{ Naughty Notification Settings
 naughty.config.presets.low.icon_size			= 256 -- set icon-size for notifications
-naughty.config.presets.low.width				= 400
-naughty.config.defaults.margin					= 3
-naughty.config.defaults.fg						= '#C2C9C9' or beautiful.fg_focus
-naughty.config.defaults.bg						= '#006666'	or beautiful.bg_focus
+naughty.config.presets.low.width			= 400
+naughty.config.defaults.margin				= 3
+naughty.config.defaults.fg				= '#C2C9C9' or beautiful.fg_focus
+naughty.config.defaults.bg				= '#006666'	or beautiful.bg_focus
 naughty.config.defaults.border_width			= 1
---naughty.config.defaults.font					= beautiful.font or "Verdana 8"
---naughty.config.defaults.screen				= 1
---naughty.config.defaults.positio				= "top_right"
+--naughty.config.defaults.font				= beautiful.font or "Verdana 8"
+--naughty.config.defaults.screen			= 1
+--naughty.config.defaults.position			= "top_right"
 --naughty.config.presets.critical.icon_size		= 64
---naughty.config.defaults.height				= 16
+--naughty.config.defaults.height			= 16
 --- }}}

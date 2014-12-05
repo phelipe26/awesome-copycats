@@ -5,7 +5,7 @@
 theme = {}
 
 theme.confdir                       = os.getenv("HOME") .. "/.config/awesome/themes/cyberpunk"
-theme.wallpaper 					= theme.confdir .. "/background.jpg"
+theme.wallpaper 					= theme.confdir .. "/background.png"
 
 theme.font							= "cantarell 7"
 --theme.taglist_font                  = "Icons 10"
@@ -14,9 +14,9 @@ theme.bg_normal						= "#0F0F0F" --#193535"  --#222222"
 theme.bg_focus						= "#0F0F0F"		--"#001414" --"#040404" --#535d6c"
 theme.bg_urgent						= "#ff0000"
 theme.bg_minimize					= "#0F0F0F"		--#0F2020"  --"#444444"
-theme.bg_systray					= "#1a1a1a"		--theme.bg_normal
+theme.bg_systray					= "#393939"  --#525252"		--theme.bg_normal
 theme.fg_normal						= "#aaaaaa"
-theme.fg_focus						= "#7519FF"		--#57FEFF"  --#00FFFF"
+theme.fg_focus						= "#0000ff"		--#57FEFF"  --#00FFFF"
 theme.fg_urgent						= "#ffffff"
 theme.fg_minimize					= "#ffffff"
 -- {{{ Borders
@@ -69,7 +69,9 @@ theme.widget_vol_mute				= theme.confdir .. "/icons/vol_mute.png"
 
 -- {{{ arrows in wibox to indicate layout
 theme.arrl_lr_pre                   = theme.confdir .. "/icons/arrl_lr_pre.png"
+theme.arrl_lr_pre_light             = theme.confdir .. "/icons/arrl_lr_pre_light.png"
 theme.arrl_lr_post                  = theme.confdir .. "/icons/arrl_lr_post.png"
+theme.arrl_lr_post_light            = theme.confdir .. "/icons/arrl_lr_post_light.png"
 -- }}}
 
 -- {{{ Titlebars
