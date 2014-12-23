@@ -53,7 +53,11 @@ run_once("nm-applet &")
 run_once("conky -c ~/.conky/conky.conf &")
 awful.util.spawn_with_shell("xscreensaver -nosplash &")
 awful.util.spawn_with_shell("compton &")
-os.execute("hdparm -B 254 /dev/sda &")
+awful.util.spawn_with_shell("hdparm -B 254 /dev/sda &")
+awful.util.spawn_with_shell("firefox &")
+awful.util.spawn_with_shell("skype &")
+awful.util.spawn_with_shell("pidgin &")
+--os.execute("hdparm -B 254 /dev/sda &")
 -- }}}
 
 -- {{{ Variable definitions
@@ -402,11 +406,12 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    --    if s == 1 then right_layout:add(wibox.widget.systray()) end
+        --if s == 1 then right_layout:add(wibox.widget.systray()) end
 
     -- user defined widgets
     right_layout:add(arrl_pre_light)
-    right_layout:add(wibox.widget.systray())
+    --right_layout:add(wibox.widget.systray())
+    if s == 1 then right_layout:add(wibox.widget.systray()) end
     right_layout:add(arrl_post_light)
     right_layout:add(batwidget)
     --	right_layout:add(baticon)
@@ -465,11 +470,12 @@ globalkeys = awful.util.table.join(
 	awful.key({ }, "XF86AudioRaiseVolume",  APW.Up),
 	awful.key({ }, "XF86AudioLowerVolume",  APW.Down),
 	awful.key({ }, "XF86AudioMute",         APW.ToggleMute),
-	awful.key({ }, "XF86MonBrightnessDown", function () awful.util.spawn("xbacklight -dec 15") end),
-	awful.key({ }, "XF86MonBrightnessUp", function () awful.util.spawn("xbacklight -inc 15") end),
+	awful.key({ }, "XF86MonBrightnessDown", function () awful.util.spawn("xbacklight -dec 15", false) end),
+	awful.key({ }, "XF86MonBrightnessUp", function () awful.util.spawn("xbacklight -inc 15", false) end),
 	awful.key({ "Control", "Shift" }, "Escape", function () awful.util.spawn_with_shell("lxtask") end),		--taskmanager
---	awful.key({ }, "Print", function () awful.util.spawn("scrot -e 'mv $f ~/screenshots/ 2>/dev/null'") end),	--screenshot --not working
-
+	--	awful.key({ }, "Print", function () awful.util.spawn("scrot -e 'mv $f ~/screenshots/ 2>/dev/null'") end),	--screenshot --not working
+	awful.key({ modkey }, "F3" , function () awful.util.spawn("xrandr --output LVDS1 --mode 1366x768 --output VGA1 --mode 1440x900 --right-of LVDS1", false) end),
+	awful.key({ modkey, "Shift" }, "F3" , function () awful.util.spawn("xrandr --output VGA1 --off", false) end),
 
 	--awful.key({ }, "XF86AudioRaiseVolume", function() awful.util.spawn("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "+", false)
 	--awful.key({ }, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer set Master 2%+", false)
@@ -640,7 +646,11 @@ awful.rules.rules = {
       properties = { floating = true } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     { rule = { class = "Firefox" },
-      properties = { tag = tags[1][2] } }
+      properties = { tag = tags[1][2] } },
+    { rule = { class = "Skype" },
+      properties = { tag = tags[1][4] } },
+    { rule = { class = "Pidgin" },
+      properties = { tag = tags[1][4] } },
    }
 -- }}}
 
