@@ -149,173 +149,106 @@ markup      = lain.util.markup
 -- mytextclock = awful.widget.textclock()
 clockicon = wibox.widget.imagebox(beautiful.widget_clock)
 -- mytextclock = awful.widget.textclock(markup("#7788af", "%A %d %B ") .. markup("#343639", ">") .. markup("#00FFFF", " %H:%M ")) --de5e1e orange, %D: MM/DD/YYYY
-mytextclock = awful.widget.textclock(markup.font("Helvetica Neue 9", markup("#2b2233", " %a %m/%d ") .. markup("#2b2233", "@") .. markup("#2b2233", " %H:%M"))) --de5e1e orange %b/%d/%y for dec/01/14
+mytextclock = awful.widget.textclock(markup.font("Helvetica Neue-Medium 9", markup("#2b2233", " %a "--%m/%d "
+) .. markup("#2b2233", "") .. markup("#2b2233", " %R %p "))) --de5e1e orange %b/%d/%y for dec/01/14
 
 -- Calendar
-lain.widgets.calendar:attach(mytextclock, { font_size = 7 })
+lain.widgets.calendar:attach(mytextclock, { font_size = 8 })
 
 -- Battery
-baticon = wibox.widget.imagebox(beautiful.widget_battery)
-batwidget = lain.widgets.bat({
-				settings = function()
-				   if bat_now.perc == "N/A" then
-				      widget:set_markup(" AC ")
-				      baticon:set_image(beautiful.widget_ac)
-				      return
-				   elseif tonumber(bat_now.perc) <= 5 then
-				      baticon:set_image(beautiful.widget_battery_empty)
-				   elseif tonumber(bat_now.perc) <= 15 then
-				      baticon:set_image(beautiful.widget_battery_low)
-				   else
-				      baticon:set_image(beautiful.widget_battery)
-				   end
-				   widget:set_markup(" " .. bat_now.perc .. "% ")
-				end
-			     })
+--baticon = wibox.widget.imagebox(beautiful.widget_battery)
+--batwidget = lain.widgets.bat({
+				--settings = function()
+				   --if bat_now.perc == "N/A" then
+				      --widget:set_markup(" AC ")
+--				      baticon:set_image(beautiful.widget_ac)
+--				      return
+--				   elseif tonumber(bat_now.perc) <= 5 then
+--				      baticon:set_image(beautiful.widget_battery_empty)
+--				   elseif tonumber(bat_now.perc) <= 15 then
+--				      baticon:set_image(beautiful.widget_battery_low)
+--				   else
+--				      baticon:set_image(beautiful.widget_battery)
+--				   end
+--				   widget:set_markup(" " .. bat_now.perc .. "% ")
+--				end
+--			     })
+			 
+-- Battery {{
+markup = lain.util.markup
+blue   = beautiful.fg_focus
+red    = "#EB8F8F"
+green  = "#00CC66" --"#8FEB8F"
 
--- ALSA Volume Mixer
-
-local alsawidget =
-   {
-      channel = "Master",
-      step = "2%",
-      colors =
-	 {
-	    unmute = "#57FEFF", -- AECF96",
-	    mute = "#FF5656"
-	 },
-      mixer = terminal .. " -e alsamixer", -- or whatever your preferred sound mixer is
-      notifications =
-	 {
-	    icons =
-	       {
-		  -- the first item is the 'muted' icon
-		  "/usr/share/icons/gnome/48x48/status/audio-volume-muted.png",
-		  -- the rest of the items correspond to intermediate volume levels - you can have as many as you want (but must be >= 1)
-		  "/usr/share/icons/gnome/48x48/status/audio-volume-low.png",
-		  "/usr/share/icons/gnome/48x48/status/audio-volume-medium.png",
-		  "/usr/share/icons/gnome/48x48/status/audio-volume-high.png"
-	       },
-	    font = "Monospace 11", -- must be a monospace font for the bar to be sized consistently
-	    icon_size = 48,
-	    bar_size = 20 -- adjust to fit your font if the bar doesn't fit
-	 }
-   }
--- widget
-alsawidget.bar = awful.widget.progressbar ()
-alsawidget.bar:set_width (8)
-alsawidget.bar:set_vertical (true)
-alsawidget.bar:set_background_color ("#494B4F")
-alsawidget.bar:set_color (alsawidget.colors.unmute)
-alsawidget.bar:buttons (awful.util.table.join (
-			   awful.button ({}, 3, function()
-					    awful.util.spawn ("pavucontrol", false)
-						end),
-			   awful.button ({}, 1, function()
-					    awful.util.spawn ("amixer sset " .. alsawidget.channel .. " toggle", false)
-					    vicious.force ({ alsawidget.bar })
-						end),
-			   awful.button ({}, 4, function()
-					    awful.util.spawn ("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "+", false)
-					    vicious.force ({ alsawidget.bar })
-						end),
-			   awful.button ({}, 5, function()
-					    awful.util.spawn ("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "-", false)
-					    vicious.force ({ alsawidget.bar })
-						end)
-					      ))
--- tooltip
-alsawidget.tooltip = awful.tooltip ({ objects = { alsawidget.bar } })
--- naughty notifications
-alsawidget._current_level = 0
-alsawidget._muted = false
-function alsawidget:notify ()
-	local preset =
-	{
-		height = 75,
-		width = 300,
-		font = alsawidget.notifications.font
-	}
-	local i = 1;
-	while alsawidget.notifications.icons[i + 1] ~= nil
-	do
-		i = i + 1
-	end
-	if i >= 2
-	then
-		preset.icon_size = alsawidget.notifications.icon_size
-		if alsawidget._muted or alsawidget._current_level == 0
-		then
-			preset.icon = alsawidget.notifications.icons[1]
-		elseif alsawidget._current_level == 100
-		then
-			preset.icon = alsawidget.notifications.icons[i]
-		else
-			local int = math.modf (alsawidget._current_level / 100 * (i - 1))
-			preset.icon = alsawidget.notifications.icons[int + 2]
-		end
-	end
-	if alsawidget._muted
-	then
-		preset.title = alsawidget.channel .. " - Muted"
-	elseif alsawidget._current_level == 0
-	then
-		preset.title = alsawidget.channel .. " - 0% (muted)"
-		preset.text = "[" .. string.rep (" ", alsawidget.notifications.bar_size) .. "]"
-	elseif alsawidget._current_level == 100
-	then
-		preset.title = alsawidget.channel .. " - 100% (max)"
-		preset.text = "[" .. string.rep ("|", alsawidget.notifications.bar_size) .. "]"
-	else
-		local int = math.modf (alsawidget._current_level / 100 * alsawidget.notifications.bar_size)
-		preset.title = alsawidget.channel .. " - " .. alsawidget._current_level .. "%"
-		preset.text = "[" .. string.rep ("|", int) .. string.rep (" ", alsawidget.notifications.bar_size - int) .. "]"
-	end
-	if alsawidget._notify ~= nil
-	then
-		
-		alsawidget._notify = naughty.notify (
-		{
-			replaces_id = alsawidget._notify.id,
-			preset = preset
-		})
-	else
-		alsawidget._notify = naughty.notify ({ preset = preset })
-	end
-end
--- register the widget through vicious
-vicious.register (alsawidget.bar, vicious.widgets.volume, function (widget, args)
-	alsawidget._current_level = args[1]
-	if args[2] == "♩"
-	then
-		alsawidget._muted = true
-		alsawidget.tooltip:set_text (" [Muted] ")
-		widget:set_color (alsawidget.colors.mute)
-		return 100
-	end
-	alsawidget._muted = false
-	alsawidget.tooltip:set_text (" " .. alsawidget.channel .. ": " .. args[1] .. "% ")
-	widget:set_color (alsawidget.colors.unmute)
-	return args[1]
-end, 0.1, alsawidget.channel) -- relatively high update time, use of keys/mouse will force update
-
--- ALSA volume
-volicon = wibox.widget.imagebox(beautiful.widget_vol)
-volumewidget = lain.widgets.alsa({
+baticon = wibox.widget.imagebox(beautiful.bat)
+batbar = awful.widget.progressbar()
+batbar:set_color(beautiful.fg_normal)
+batbar:set_width(18)
+batbar:set_ticks(false)
+batbar:set_ticks_size(2)
+batbar:set_background_color(beautiful.bg_normal)
+batmargin = wibox.layout.margin(batbar, 2, 7)
+batmargin:set_top(7)
+batmargin:set_bottom(7)
+batupd = lain.widgets.bat({
     settings = function()
-        if volume_now.status == "off" then
-            volicon:set_image(beautiful.widget_vol_mute)
-        elseif tonumber(volume_now.level) == 0 then
-            volicon:set_image(beautiful.widget_vol_no)
-        elseif tonumber(volume_now.level) <= 50 then
-            volicon:set_image(beautiful.widget_vol_low)
+        if bat_now.perc == "N/A" then
+            bat_perc = 100
+            --baticon:set_image(beautiful.ac)
         else
-            volicon:set_image(beautiful.widget_vol)
+            bat_perc = tonumber(bat_now.perc)
+            if bat_perc >= 96 then
+                batbar:set_color(green)
+            elseif bat_perc > 50 then
+                batbar:set_color(beautiful.fg_normal)
+                --baticon:set_image(beautiful.bat)
+            elseif bat_perc > 15 then
+                batbar:set_color(beautiful.fg_normal)
+               -- baticon:set_image(beautiful.bat_low)
+            else
+                batbar:set_color(red)
+               -- baticon:set_image(beautiful.bat_no)
+            end
         end
-
-        widget:set_text(" " .. volume_now.level .. "% ")
+        batbar:set_value(bat_perc / 100)
     end
 })
+batwidget = wibox.widget.background(batmargin)
+batwidget:set_bgimage(beautiful.batwidget_bg)
+--}}
+			     
+
+-- ALSA volume bar
+volicon = wibox.widget.imagebox(beautiful.vol)
+volume = lain.widgets.alsabar({
+vertical = false,
+width = 55, 
+ticks = true, 
+ticks_size = 6, 
+timeout = 0.1,
+settings = function()
+    if volume_now.status == "off" then
+        volicon:set_image(beautiful.vol_mute)
+    elseif volume_now.level == 0 then
+        volicon:set_image(beautiful.vol_no)
+    elseif volume_now.level <= 50 then
+        volicon:set_image(beautiful.vol_low)
+    else
+        volicon:set_image(beautiful.vol)
+    end
+end,
+colors =
+{
+    background = beautiful.bg_normal,
+    mute = red,
+    unmute = beautiful.fg_normal
+}})
+volmargin = wibox.layout.margin(volume.bar, 2, 7)
+volmargin:set_top(6)
+volmargin:set_bottom(6)
+volumewidget = wibox.widget.background(volmargin)
+volumewidget:set_bgimage(beautiful.widget_bg)
+
 
 -- Separators
 first = wibox.widget.textbox('<span font="Helvetica Neue 10"> </span>')
@@ -330,6 +263,7 @@ arrl_post_light:set_image(beautiful.arrl_lr_post_light)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
+--wrapwibox = {}
 mypromptbox = {}
 mylayoutbox = {}
 mytaglist = {}
@@ -396,9 +330,9 @@ for s = 1, screen.count() do
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
     -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "top", height = "18", screen = s, 
-})
-
+   -- wrapwibox[s] = awful.wibox({ position = "top", height = "22", screen = s})
+    mywibox[s] = awful.wibox({ position = "top", height = "20", screen = s, border_width = 0})
+  
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
 	left_layout:add(mylauncher)
@@ -406,31 +340,33 @@ for s = 1, screen.count() do
     left_layout:add(mytaglist[s])
     left_layout:add(mypromptbox[s])
     
-    --left_layout:add(arrl_pre)
-    --left_layout:add(mylayoutbox[s])
-    --left_layout:add(arrl_post)
-    --left_layout:add(first)
+    left_layout:add(arrl_pre)
+    left_layout:add(mylayoutbox[s])
+    left_layout:add(arrl_post)
+    left_layout:add(first)
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
+	right_layout:add(first)
 		if s == 1 then right_layout:add(wibox.widget.systray()) end
-    right_layout:add(batwidget)
-    right_layout:add(alsawidget.bar)
     right_layout:add(first)
-    right_layout:add(arrl_pre)
-    right_layout:add(mylayoutbox[s])
-    right_layout:add(arrl_post)
+    right_layout:add(volicon)
+    right_layout:add(volumewidget)
+    right_layout:add(first)
+    right_layout:add(batwidget)
     right_layout:add(mytextclock)
-   
+
+    -- right_layout:add(alsawidget.bar) -- This is the old Alsa Widget; can be placed vertically
+	--right_layout:add(baticon)
+    --right_layout:add(arrl_pre)
+    --right_layout:add(mylayoutbox[s])
+    --right_layout:add(arrl_post)
     --right_layout:add(arrl_pre_light)
     --right_layout:add(wibox.widget.systray())
     --right_layout:add(arrl_post_light)
-    --right_layout:add(baticon)
-    --right_layout:add(volicon)
-    --right_layout:add(volumewidget)
     --right_layout:add(APW)
     --right_layout:add(clockicon)
-    --right_layout:add(mylayoutbox[s]) -- tiling vs floating options
+    --right_layout:add(mylayoutbox[s]) -- tiling & floating options
 
     -- Now bring it all together (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()
@@ -438,9 +374,9 @@ for s = 1, screen.count() do
     layout:set_middle(mytasklist[s])
     layout:set_right(right_layout)
     
-    local systray_margin = wibox.layout.margin()
-    systray_margin:set_margins(1)
-    systray_margin:set_widget(layout)
+    --local systray_margin = wibox.layout.margin()
+    --systray_margin:set_margins(1)
+    --systray_margin:set_widget(layout)
 
     mywibox[s]:set_widget(layout)
 end
@@ -664,13 +600,16 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
-    -- Set Firefox to always map on tags number 2 of screen 1.
+    { rule = { class = "Gimp", role = "gimp-image-window" },
+      properties = { maximized_horizontal = true,
+                     maximized_vertical = true } },
+    -- Set application to always map on tags number N of screen 1.
     { rule = { class = "Firefox" },
       properties = { tag = tags[1][2] } },
     { rule = { class = "Skype" },
-      properties = { tag = tags[1][4] } },
+      properties = { tag = tags[1][3] } },
     { rule = { class = "Pidgin" },
-      properties = { tag = tags[1][4] } },
+      properties = { tag = tags[1][3] } },
       -- making sure firefox's plugin-container is always on top
     { rule = { instance = "plugin-container" },
      properties = { floating = true } },
@@ -767,8 +706,8 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 naughty.config.presets.low.icon_size			= 256 -- set icon-size for notifications
 naughty.config.presets.low.width			= 400
 naughty.config.defaults.margin				= 3
-naughty.config.defaults.fg				= '#C2C9C9' or beautiful.fg_focus
-naughty.config.defaults.bg				= '#006666'	or beautiful.bg_focus
+naughty.config.defaults.fg				= '#2b2233' or beautiful.fg_focus
+naughty.config.defaults.bg				= '#C2C2C2'	or beautiful.bg_focus
 naughty.config.defaults.border_width			= 1
 --naughty.config.defaults.font				= beautiful.font or "Verdana 8"
 --naughty.config.defaults.screen			= 1

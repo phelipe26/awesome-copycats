@@ -7,18 +7,19 @@ theme = {}
 theme.confdir                       = os.getenv("HOME") .. "/.config/awesome/themes/photon"
 theme.wallpaper 					= theme.confdir .. "/background.png"
 
-theme.font							= "Helvetica Neue Regular 9"
---theme.taglist_font                  = "Icons 10"
+theme.font							= "Helvetica Neue-Medium 9"
+--theme.taglist_font                  = "Helvetica Neue-Medium 9"
 
+theme.fg_normal						= "#2b2233"		--"#aaaaaa"
 theme.bg_normal						= "#C2C2C2"			--"#0F0F0F" --#193535"  --#222222"  -- background of the wibox
+theme.fg_focus						= "#0000CC"		--#57FEFF"  --#00FFFF"
 theme.bg_focus						= theme.bg_normal		--"#001414" --"#040404" --#535d6c"  -- background of focused window
+theme.fg_urgent						= "#CC0000"
 theme.bg_urgent						= "#ff5050"
+theme.fg_minimize					= "#5E5E5E"
 theme.bg_minimize					= theme.bg_normal  --"#0F0F0F"		--#0F2020"  --"#444444" -- background of minimized window
 theme.bg_systray					= theme.bg_normal --"#393939"  --#525252"		--theme.bg_normal
-theme.fg_normal						= "#2b2233"		--"#aaaaaa"
-theme.fg_focus						= "#0000CC"		--#57FEFF"  --#00FFFF"
-theme.fg_urgent						= "#CC0000"
-theme.fg_minimize					= "#5E5E5E"
+
 -- {{{ Borders
 theme.border_width					= 0
 theme.border_normal					= "#3F3F3F"
@@ -30,9 +31,16 @@ theme.menu_submenu_icon				= theme.confdir .. "/icons/submenu.png"
 theme.menu_height 					= 25
 theme.menu_width  					= 150
 
+--theme.textbox_widget_margin_top     = 1
+--theme.awful_widget_height           = 14
+--theme.awful_widget_margin_top       = 2
+
 -- Display the taglist squares
-theme.taglist_squares_sel           = theme.confdir .. "/taglist/square_sel.png"
-theme.taglist_squares_unsel         = theme.confdir .. "/taglist/square_unsel.png"
+--theme.taglist_squares_sel           = theme.confdir .. "/taglist/square_sel.png"
+--theme.taglist_squares_unsel         = theme.confdir .. "/taglist/square_unsel.png"
+theme.taglist_fg_focus				= "#0000CC"		--#57FEFF"  --#00FFFF"
+--theme.taglist_bg_focus              = "png:" .. theme.confdir .. "/taglist/taglist_bg_focus.png"
+
 --theme.taglist_fg_focus              = "#dddcff"
 --theme.taglist_bg_focus              = "#121212"
 
@@ -57,6 +65,9 @@ theme.layout_dwindle				= theme.confdir .. "/layouts/dwindle.png"
 theme.arch_icon 					= theme.confdir .. "/icons/arch_bw.png"
 --theme.awesome_icon 					= "/usr/share/awesome/icons/awesome16.png"
 
+theme.widget_bg                     = theme.confdir .. "/icons/widget_bg.png"
+theme.batwidget_bg                  = theme.confdir .. "/icons/batwidget_bg.png"
+
 -- theme.widget_batt				= theme.confdir .. "/icons/bat.png"
 theme.widget_clock					= theme.confdir .. "/icons/clock.png"
 --theme.widget_vol					= theme.confdir .. "/icons/spkr.png"
@@ -68,6 +79,19 @@ theme.widget_vol					= theme.confdir .. "/icons/vol.png"
 theme.widget_vol_low				= theme.confdir .. "/icons/vol_low.png"
 theme.widget_vol_no					= theme.confdir .. "/icons/vol_no.png"
 theme.widget_vol_mute				= theme.confdir .. "/icons/vol_mute.png"
+
+theme.vol                                       = theme.confdir .. "/icons/vol.png"
+theme.vol_low                                   = theme.confdir .. "/icons/vol_low.png"
+theme.vol_no                                    = theme.confdir .. "/icons/vol_no.png"
+theme.vol_mute                                  = theme.confdir .. "/icons/vol_mute.png"
+theme.disk                                      = theme.confdir .. "/icons/disk.png"
+theme.ac                                        = theme.confdir .. "/icons/ac.png"
+theme.bat                                       = theme.confdir .. "/icons/bat.png"
+theme.bat_low                                   = theme.confdir .. "/icons/bat_low.png"
+theme.bat_no                                    = theme.confdir .. "/icons/bat_no.png"
+theme.play                                      = theme.confdir .. "/icons/play.png"
+theme.pause                                     = theme.confdir .. "/icons/pause.png"
+
 
 -- {{{ arrows in wibox to indicate layout
 theme.arrl_lr_pre                   = theme.confdir .. "/icons/arrl_lr_pre.png"
