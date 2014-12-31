@@ -8,11 +8,10 @@ local beautiful	= require("beautiful")			-- Theme handling library
 local naughty 	= require("naughty")			-- Notification library
 local menubar 	= require("menubar")
 
--- {{{ User-defined libraries
+-- # User-defined libraries
 local APW 		= require("apw/widget")		-- Volume indicator
 local lain 		= require("lain")
 vicious			= require("vicious")
--- }}}
 
 -- {{{ Error handling
 if awesome.startup_errors then
@@ -64,16 +63,16 @@ awful.util.spawn_with_shell("hdparm -B 254 /dev/sda &")
 
 -- {{{ Variable definitions
 
--- Theme directory
+-- # Theme directory
 beautiful.init(awful.util.getdir("config") .. "/themes/photon/theme.lua")	--default theme, as of now:customized
 
--- Common
+-- # Common
 modkey 			= "Mod4"							-- Default modkey.
 terminal 		= "xfce4-terminal"					--default terminal
 editor 			= os.getenv("EDITOR") or "nano"
 editor_cmd 		= terminal .. " -e " .. editor
 
--- Table of layouts to cover with awful.layout.inc, order matters.
+-- # Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
     awful.layout.suit.floating,			--1
@@ -125,61 +124,53 @@ mymainmenu = awful.menu({ items = { 	{ "awesome", myawesomemenu, beautiful.aweso
 					{ "explorer", "nemo" },
                                 	{ "task manager", "lxtask" },
 					{ "spin down HDD", "hdparm -B 254 /dev/sda" }
-					--{ "firefox", "firefox" },
-
-
-                                  }
+				                                 }
                         })
 icon = wibox.widget.imagebox()
 icon:set_image(beautiful.arch)
 
 mylauncher = awful.widget.launcher({	image = beautiful.arch_icon,
-										menu = mymainmenu })
-                                     
-                                 
+										menu = mymainmenu })                             
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
--- {{{ Wibox
-markup      = lain.util.markup
+--################################################WIDGETS#######################################################
 
--- Create a textclock widget
+-- {{{ Wibox
+
+-- # lain markup
+markup      = lain.util.markup
+blue  		= beautiful.fg_focus
+red   		= "#EB8F8F"
+green 		= "#00CC66" --"#8FEB8F"
+
+-- # Naughty Notification Settings
+naughty.config.presets.low.icon_size			= 256 -- set icon-size for notifications
+naughty.config.presets.low.width			= 400
+naughty.config.defaults.margin				= 3
+naughty.config.defaults.fg				= '#2b2233' or beautiful.fg_focus
+naughty.config.defaults.bg				= '#C2C2C2'	or beautiful.bg_focus
+naughty.config.defaults.border_width			= 1
+--naughty.config.defaults.font				= beautiful.font or "Verdana 8"
+--naughty.config.defaults.screen			= 1
+--naughty.config.defaults.position			= "top_right"
+--naughty.config.presets.critical.icon_size		= 64
+--naughty.config.defaults.height			= 16
+
+-- # Create a textclock widget
 -- mytextclock = awful.widget.textclock()
 clockicon = wibox.widget.imagebox(beautiful.widget_clock)
 -- mytextclock = awful.widget.textclock(markup("#7788af", "%A %d %B ") .. markup("#343639", ">") .. markup("#00FFFF", " %H:%M ")) --de5e1e orange, %D: MM/DD/YYYY
 mytextclock = awful.widget.textclock(markup.font("Helvetica Neue-Medium 9", markup("#2b2233", " %a "--%m/%d "
 ) .. markup("#2b2233", "") .. markup("#2b2233", " %R %p "))) --de5e1e orange %b/%d/%y for dec/01/14
 
--- Calendar
+-- # Calendar
 lain.widgets.calendar:attach(mytextclock, { font_size = 8 })
 
--- Battery
---baticon = wibox.widget.imagebox(beautiful.widget_battery)
---batwidget = lain.widgets.bat({
-				--settings = function()
-				   --if bat_now.perc == "N/A" then
-				      --widget:set_markup(" AC ")
---				      baticon:set_image(beautiful.widget_ac)
---				      return
---				   elseif tonumber(bat_now.perc) <= 5 then
---				      baticon:set_image(beautiful.widget_battery_empty)
---				   elseif tonumber(bat_now.perc) <= 15 then
---				      baticon:set_image(beautiful.widget_battery_low)
---				   else
---				      baticon:set_image(beautiful.widget_battery)
---				   end
---				   widget:set_markup(" " .. bat_now.perc .. "% ")
---				end
---			     })
-			 
--- Battery {{
+-- # Battery {{
 markup = lain.util.markup
-blue   = beautiful.fg_focus
-red    = "#EB8F8F"
-green  = "#00CC66" --"#8FEB8F"
-
 baticon = wibox.widget.imagebox(beautiful.bat)
 batbar = awful.widget.progressbar()
 batbar:set_color(beautiful.fg_normal)
@@ -217,8 +208,7 @@ batwidget = wibox.widget.background(batmargin)
 batwidget:set_bgimage(beautiful.batwidget_bg)
 --}}
 			     
-
--- ALSA volume bar
+-- # ALSA volume bar {{
 volicon = wibox.widget.imagebox(beautiful.vol)
 volume = lain.widgets.alsabar({
 vertical = false,
@@ -248,9 +238,9 @@ volmargin:set_top(6)
 volmargin:set_bottom(6)
 volumewidget = wibox.widget.background(volmargin)
 volumewidget:set_bgimage(beautiful.widget_bg)
+--}}
 
-
--- Separators
+-- # Separators
 first = wibox.widget.textbox('<span font="Helvetica Neue 10"> </span>')
 arrl_pre = wibox.widget.imagebox()
 arrl_pre:set_image(beautiful.arrl_lr_pre)
@@ -261,9 +251,10 @@ arrl_post:set_image(beautiful.arrl_lr_post)
 arrl_post_light = wibox.widget.imagebox()
 arrl_post_light:set_image(beautiful.arrl_lr_post_light)
 
+--############################################DONT TOUCH##########################################
+
 -- Create a wibox for each screen and add it
 mywibox = {}
---wrapwibox = {}
 mypromptbox = {}
 mylayoutbox = {}
 mytaglist = {}
@@ -329,8 +320,9 @@ for s = 1, screen.count() do
     -- Create a tasklist widget
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
+--#############################################WIDGETS IN WIBOX##################################################
+
     -- Create the wibox
-   -- wrapwibox[s] = awful.wibox({ position = "top", height = "22", screen = s})
     mywibox[s] = awful.wibox({ position = "top", height = "20", screen = s, border_width = 0})
   
     -- Widgets that are aligned to the left
@@ -382,6 +374,8 @@ for s = 1, screen.count() do
 end
 -- }}}
 
+--###############################################KEY BINDINGS###################################################
+
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
 		awful.button({ }, 3, function () mymainmenu:toggle() end),
@@ -408,52 +402,52 @@ globalkeys = awful.util.table.join(
         end),
     awful.key({ modkey,           }, "w", function () mymainmenu:show() end),
 
--- Custom Key bindings
+-- # Custom Key bindings
 	awful.key({ }, "XF86AudioPlay", function () awful.util.spawn_with_shell("banshee --hide --toggle-playing") end),
 	awful.key({ }, "XF86AudioStop", function () awful.util.spawn_with_shell("banshee --hide --stop") end),
 	awful.key({ }, "XF86AudioPrev", function () awful.util.spawn_with_shell("banshee --hide --previous") end),
 	awful.key({ }, "XF86AudioNext", function () awful.util.spawn_with_shell("banshee --hide --next") end),   
---	awful.key({ }, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer set Master 2%+", false) end),
---	awful.key({ }, "XF86AudioLowerVolume", function () awful.util.spawn("amixer set Master 2%-", false) end),
---	awful.key({ }, "XF86AudioMute", function () awful.util.spawn("amixer set Master toggle", false) end),
-	awful.key({ }, "XF86AudioRaiseVolume",  APW.Up),
-	awful.key({ }, "XF86AudioLowerVolume",  APW.Down),
-	awful.key({ }, "XF86AudioMute",         APW.ToggleMute),
 	awful.key({ }, "XF86MonBrightnessDown", function () awful.util.spawn("xbacklight -dec 15", false) end),
 	awful.key({ }, "XF86MonBrightnessUp", function () awful.util.spawn("xbacklight -inc 15", false) end),
-	awful.key({ "Control", "Shift" }, "Escape", function () awful.util.spawn_with_shell("lxtask") end),		--taskmanager
-	awful.key({ }, "Print", function () awful.util.spawn("scrot -e 'mv $f ~/Pictures/Screenshots/ 2>/dev/null'", false) end),	--screenshot; scrot needs to be installed
+	
+-- # taskmanager
+	awful.key({ "Control", "Shift" }, "Escape", function () awful.util.spawn_with_shell("lxtask") end),
+
+-- # screenshot; scrot needs to be installed
+	awful.key({ }, "Print", function () awful.util.spawn("scrot -e 'mv $f ~/Pictures/Screenshots/ 2>/dev/null'", false) end),
+
+-- # output on additional screen
 	awful.key({ modkey }, "F3" , function () awful.util.spawn("xrandr --output LVDS1 --mode 1366x768 --output VGA1 --mode 1440x900 --right-of LVDS1", false) end),
 	awful.key({ modkey, "Shift" }, "F3" , function () awful.util.spawn("xrandr --output VGA1 --off", false) end),
-	--dynamic tagging
+
+-- # dynamic tagging
 	awful.key({ modkey, "Shift" }, "n", function () lain.util.add_tag(mypromptbox) end),
 	awful.key({ modkey, "Shift" }, "r", function () lain.util.rename_tag(mypromptbox) end),
 	awful.key({ modkey, "Shift" }, "Left", function () lain.util.move_tag(1) end),  -- move to next tag
 	awful.key({ modkey, "Shift" }, "Right", function () lain.util.move_tag(-1) end), -- move to previous tag
 	awful.key({ modkey, "Shift" }, "d", function () lain.util.remove_tag() end),
 
+-- # ALSA volume control
+    awful.key({ }, "XF86AudioRaiseVolume",
+        function ()
+            awful.util.spawn("amixer -q set " .. volume.channel .. " " .. volume.step .. "+", false)
+            volume.update()
+            volume.notify()
+        end),
+ awful.key({ }, "XF86AudioLowerVolume",
+        function ()
+            awful.util.spawn("amixer -q set " .. volume.channel .. " " .. volume.step .. "-", false)
+            volume.update()
+            volume.notify()
+        end),
+ awful.key({ }, "XF86AudioMute",
+        function ()
+            awful.util.spawn("amixer -q set " .. volume.channel .. " playback toggle", false)
+            volume.update()
+            volume.notify()
+        end),
 
-	--awful.key({ }, "XF86AudioRaiseVolume", function() awful.util.spawn("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "+", false)
-	--awful.key({ }, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer set Master 2%+", false)
-	--vicious.force({ alsawidget.bar })
-	--alsawidget.notify()
-	--end),
-	--awful.key({ }, "XF86AudioLowerVolume", function() awful.util.spawn("amixer sset " .. alsawidget.channel .. " " .. alsawidget.step .. "-", false)
-	--awful.key({ }, "XF86AudioLowerVolume", function () awful.util.spawn("amixer set Master 2%-", false)
-	--vicious.force({ alsawidget.bar })
-	--alsawidget.notify()
-	--end),
-	--awful.key({ }, "XF86AudioMute", function() awful.util.spawn("amixer sset " .. alsawidget.channel .. " toggle", false)
-	--awful.key({ }, "XF86AudioMute", function () awful.util.spawn("amixer set Master toggle", false)
-	-- The 2 following lines were needed at least on my configuration, otherwise it would get stuck muted
-	--awful.util.spawn("amixer sset " .. "Speaker" .. " unmute", false)
-	--awful.util.spawn("amixer sset " .. "Headphone" .. " unmute", false)
-	--vicious.force({ alsawidget.bar })
-	--alsawidget.notify()
-	--end),
-
-
-    -- Layout manipulation
+-- # Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
     awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
@@ -467,7 +461,7 @@ globalkeys = awful.util.table.join(
             end
         end),
 
-    -- Standard program
+-- # Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
@@ -483,7 +477,7 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
 
-    -- Prompt
+-- # Prompt
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
 
     awful.key({ modkey }, "x",
@@ -493,20 +487,18 @@ globalkeys = awful.util.table.join(
                   awful.util.eval, nil,
                   awful.util.getdir("cache") .. "/history_eval")
               end),
-    -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end)
-)
-
-clientkeys = awful.util.table.join(
-
--- [[[  toggle titlebar/wibox
+              
+-- # toggle titlebar/wibox
 	awful.key({ modkey, "Shift" }, "t", awful.titlebar.toggle),
 	awful.key({ }, "Menu", function ()
 		mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible
 		end),
-    -- ]]]
 
+-- # Menubar
+    awful.key({ modkey }, "p", function() menubar.show() end)
+)
 
+clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
     awful.key({ modkey,		  }, "q",      function (c) c:kill()                         end),
@@ -527,6 +519,7 @@ clientkeys = awful.util.table.join(
         end)
 )
 
+--##############################################DONT TOUCH####################################################
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it works on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
@@ -581,6 +574,8 @@ clientbuttons = awful.util.table.join(
 root.keys(globalkeys)
 -- }}}
 
+--###############################################RULES######################################################
+
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
@@ -617,6 +612,8 @@ awful.rules.rules = {
      properties = { floating = true } },
    }
 -- }}}
+
+--#################################################DONT TOUCH####################################################
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
@@ -701,17 +698,3 @@ client.connect_signal("focus", function(c) c.border_color =
 beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
-
--- {{{ Naughty Notification Settings
-naughty.config.presets.low.icon_size			= 256 -- set icon-size for notifications
-naughty.config.presets.low.width			= 400
-naughty.config.defaults.margin				= 3
-naughty.config.defaults.fg				= '#2b2233' or beautiful.fg_focus
-naughty.config.defaults.bg				= '#C2C2C2'	or beautiful.bg_focus
-naughty.config.defaults.border_width			= 1
---naughty.config.defaults.font				= beautiful.font or "Verdana 8"
---naughty.config.defaults.screen			= 1
---naughty.config.defaults.position			= "top_right"
---naughty.config.presets.critical.icon_size		= 64
---naughty.config.defaults.height			= 16
---- }}}
