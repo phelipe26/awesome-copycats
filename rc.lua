@@ -488,17 +488,18 @@ globalkeys = awful.util.table.join(
                   awful.util.getdir("cache") .. "/history_eval")
               end),
               
+-- # Menubar
+    awful.key({ modkey }, "p", function() menubar.show() end)
+)
+
+clientkeys = awful.util.table.join(
+
 -- # toggle titlebar/wibox
 	awful.key({ modkey, "Shift" }, "t", awful.titlebar.toggle),
 	awful.key({ }, "Menu", function ()
 		mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible
 		end),
 
--- # Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end)
-)
-
-clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
     awful.key({ modkey,		  }, "q",      function (c) c:kill()                         end),
