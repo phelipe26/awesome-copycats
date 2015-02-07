@@ -50,6 +50,7 @@ end
 -- {{{ Autostart applications
 run_once("nm-applet &")
 run_once("conky -c ~/.conky/conky.conf &")
+run_once("ibus-daemon &")
 run_once("firefox &")
 run_once("skype &")
 run_once("pidgin &")
@@ -100,7 +101,7 @@ end
 
 -- {{{ Tags /// changes the name and layout per tag
 tags 	= {
-   names	= { 	"cmd", "web", "im", "office" }, -- for now 4 tags is sufficient, dynamic tagging enabled; more can be added using modkey+Shift+n
+   names	= { 	" cmd ", " web ", " im ", " office " }, -- for now 4 tags is sufficient, dynamic tagging enabled; more can be added using modkey+Shift+n
    layout	= { 	layouts[2], layouts[10], layouts[2], layouts[2]	}
 }
 for s = 1, screen.count() do
@@ -145,6 +146,8 @@ markup      = lain.util.markup
 blue  		= beautiful.fg_focus
 red   		= "#EB8F8F"
 green 		= "#00CC66" --"#8FEB8F"
+yellow 		= "#CCFF33" --"#8FEB8F"
+orange 		= "#FF3300" --"#8FEB8F"
 
 -- # Naughty Notification Settings
 naughty.config.presets.low.icon_size			= 256 -- set icon-size for notifications
@@ -163,8 +166,8 @@ naughty.config.defaults.border_width			= 1
 -- mytextclock = awful.widget.textclock()
 clockicon = wibox.widget.imagebox(beautiful.widget_clock)
 -- mytextclock = awful.widget.textclock(markup("#7788af", "%A %d %B ") .. markup("#343639", ">") .. markup("#00FFFF", " %H:%M ")) --de5e1e orange, %D: MM/DD/YYYY
-mytextclock = awful.widget.textclock(markup.font("Helvetica Neue-Medium 9", markup("#2b2233", " %a "--%m/%d "
-) .. markup("#2b2233", "") .. markup("#2b2233", " %R %p "))) --de5e1e orange %b/%d/%y for dec/01/14
+mytextclock = awful.widget.textclock(markup.font("Helvetica Neue-Medium 9", markup("#2b2233", "   %a "--%m/%d "
+) .. markup("#2b2233", "") .. markup("#2b2233", "  %R %p    "))) --de5e1e orange %b/%d/%y for dec/01/14
 
 -- # Calendar
 lain.widgets.calendar:attach(mytextclock, { font_size = 8 })
@@ -188,13 +191,16 @@ batupd = lain.widgets.bat({
             --baticon:set_image(beautiful.ac)
         else
             bat_perc = tonumber(bat_now.perc)
-            if bat_perc >= 96 then
+            if bat_perc >= 97 then
                 batbar:set_color(green)
-            elseif bat_perc > 50 then
+            elseif bat_perc > 60 then
                 batbar:set_color(beautiful.fg_normal)
                 --baticon:set_image(beautiful.bat)
+            elseif bat_perc > 30 then
+                batbar:set_color(yellow)
+                --baticon:set_image(beautiful.bat)
             elseif bat_perc > 15 then
-                batbar:set_color(beautiful.fg_normal)
+                batbar:set_color(orange)
                -- baticon:set_image(beautiful.bat_low)
             else
                 batbar:set_color(red)
@@ -327,6 +333,9 @@ for s = 1, screen.count() do
   
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
+	left_layout:add(first)
+	left_layout:add(first)
+	left_layout:add(first)
 	left_layout:add(mylauncher)
 	left_layout:add(first)
     left_layout:add(mytaglist[s])
@@ -412,6 +421,9 @@ globalkeys = awful.util.table.join(
 	
 -- # taskmanager
 	awful.key({ "Control", "Shift" }, "Escape", function () awful.util.spawn_with_shell("lxtask") end),
+
+-- # nemo
+	awful.key({ modkey,			}, "e", function () awful.util.spawn_with_shell("nemo", false) end),
 
 -- # screenshot; scrot needs to be installed
 	awful.key({ }, "Print", function () awful.util.spawn("scrot -e 'mv $f ~/Pictures/Screenshots/ 2>/dev/null'", false) end),
@@ -502,7 +514,7 @@ clientkeys = awful.util.table.join(
 
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
-    awful.key({ modkey,		  }, "q",      function (c) c:kill()                         end),
+    awful.key({ modkey,			  }, "q",      function (c) c:kill()                         end),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
