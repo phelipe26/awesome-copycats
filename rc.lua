@@ -36,6 +36,12 @@ do
 end
 -- }}}
 
+-- disable startup-notification globally
+local oldspawn = awful.util.spawn
+awful.util.spawn = function (s)
+  oldspawn(s, false)
+end
+
 -- {{{ Run applications once on startup
 function run_once(cmd)
    findme = cmd
@@ -51,13 +57,14 @@ end
 run_once("nm-applet &")
 run_once("conky -c ~/.conky/conky.conf &")
 run_once("ibus-daemon &")
-run_once("firefox &")
-run_once("skype &")
+run_once("firefox &", "startup_instance", nil, 1)
+--run_once("skype &")
 run_once("pidgin &")
 run_once("owncloud-client &")
 
 awful.util.spawn_with_shell("xscreensaver -nosplash &")
 awful.util.spawn_with_shell("compton &")
+--awful.util.spawn_with_shell("xcompmgr -cF &")
 awful.util.spawn_with_shell("hdparm -B 254 /dev/sda &")
 --os.execute("hdparm -B 254 /dev/sda &")
 -- }}}
@@ -150,17 +157,23 @@ yellow 		= "#CCFF33" --"#8FEB8F"
 orange 		= "#FF3300" --"#8FEB8F"
 
 -- # Naughty Notification Settings
-naughty.config.presets.low.icon_size			= 256 -- set icon-size for notifications
+naughty.config.presets.low.icon_size		= 256 -- set icon-size for notifications
 naughty.config.presets.low.width			= 400
 naughty.config.defaults.margin				= 3
-naughty.config.defaults.fg				= '#2b2233' or beautiful.fg_focus
-naughty.config.defaults.bg				= '#C2C2C2'	or beautiful.bg_focus
-naughty.config.defaults.border_width			= 1
+--naughty.config.defaults.fg				= '#2b2233' or beautiful.fg_focus
+--naughty.config.defaults.bg				= '#C2C2C2'	or beautiful.bg_focus
+naughty.config.defaults.border_width		= 1
 --naughty.config.defaults.font				= beautiful.font or "Verdana 8"
 --naughty.config.defaults.screen			= 1
---naughty.config.defaults.position			= "top_right"
---naughty.config.presets.critical.icon_size		= 64
+naughty.config.defaults.position			= "top_center"
+--naughty.config.presets.critical.icon_size	= 64
 --naughty.config.defaults.height			= 16
+--naughty.config.paddingx = 500
+naughty.config.presets.normal.opacity = 0.8
+naughty.config.presets.low.opacity = 0.8
+naughty.config.presets.critical.opacity = 0.8
+
+
 
 -- # Create a textclock widget
 -- mytextclock = awful.widget.textclock()
@@ -612,8 +625,8 @@ awful.rules.rules = {
       properties = { maximized_horizontal = true,
                      maximized_vertical = true } },
     -- Set application to always map on tags number N of screen 1.
-    { rule = { class = "Firefox" },
-      properties = { tag = tags[1][2] } },
+    { rule = { class = "Firefox", instance = "startup_instance" },
+      properties = { tag = tags[2] } },
     { rule = { class = "Skype" },
       properties = { tag = tags[1][3] } },
     { rule = { class = "Pidgin" },
