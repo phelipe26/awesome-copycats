@@ -1,10 +1,10 @@
 awesome
 =======
 
-my awesome configs and themes
+my awesome configs and themes, awesome_base folder content needs to be copied to /usr/share/awesome/lib in order for it to work
 
 Licensed under GNU General Public License v2 
-      * (c) 2014, phelipe26 
+      * (c) 2015, phelipe26 
 This is a fork based on the copycat-killer repo mentioned in the credits below.
 I have been using several widgets and bits and pieces of themes.
 

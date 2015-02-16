@@ -49,6 +49,14 @@ theme.taglist_fg_focus				= "#0000CC"		--#57FEFF"  --#00FFFF"
 -- beautiful.variable in your rc.lua
 --theme.bg_widget = "#cc0000"
 
+-- tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
+theme.tooltip_font						= "Helvetica Neue-Medium 9"
+theme.tooltip_opacity					= 0.9
+theme.tooltip_fg_color					= '#DEDEDE'
+theme.tooltip_bg_color					= '#2B292E'
+theme.tooltip_border_width				= 0
+theme.tooltip_border_color				= '#2B292E'
+
 -- You can use your own layout icons like this:
 theme.layout_fairh					= theme.confdir .. "/layouts/fairh.png"
 theme.layout_fairv					= theme.confdir .. "/layouts/fairv.png"

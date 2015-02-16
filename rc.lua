@@ -2,7 +2,7 @@
 local gears 	= require("gears")
 local awful 	= require("awful")
 awful.rules 	= require("awful.rules")
-		  require("awful.autofocus")
+				  require("awful.autofocus")
 local wibox 	= require("wibox")			-- Widget and layout library
 local beautiful	= require("beautiful")			-- Theme handling library
 local naughty 	= require("naughty")			-- Notification library
@@ -157,22 +157,23 @@ yellow 		= "#CCFF33" --"#8FEB8F"
 orange 		= "#FF3300" --"#8FEB8F"
 
 -- # Naughty Notification Settings
-naughty.config.presets.low.icon_size		= 256 -- set icon-size for notifications
+naughty.config.presets.low.icon_size		= 256 			-- set icon-size for notifications
 naughty.config.presets.low.width			= 400
-naughty.config.defaults.margin				= 3
---naughty.config.defaults.fg				= '#2b2233' or beautiful.fg_focus
---naughty.config.defaults.bg				= '#C2C2C2'	or beautiful.bg_focus
-naughty.config.defaults.border_width		= 1
---naughty.config.defaults.font				= beautiful.font or "Verdana 8"
---naughty.config.defaults.screen			= 1
+naughty.config.defaults.margin				= 25
+naughty.config.defaults.fg					= '#DEDEDE'		--#2b2233' or beautiful.fg_focus
+naughty.config.defaults.bg					= '#2B292E'		--#C2C2C2'	or beautiful.bg_focus
+naughty.config.defaults.border_width		= 0
+naughty.config.defaults.border_color		= '#2B292E'
+naughty.config.defaults.hover_timeout    	= nil
 naughty.config.defaults.position			= "top_center"
---naughty.config.presets.critical.icon_size	= 64
---naughty.config.defaults.height			= 16
---naughty.config.paddingx = 500
 naughty.config.presets.normal.opacity 		= 0.9
 naughty.config.presets.low.opacity 			= 0.9
 naughty.config.presets.critical.opacity 	= 0.9
-
+--naughty.config.defaults.font				= beautiful.font or "Verdana 8"
+--naughty.config.defaults.screen			= 1
+--naughty.config.presets.critical.icon_size	= 64
+--naughty.config.defaults.height			= 16
+--naughty.config.paddingx					= 500
 
 
 -- # Create a textclock widget
@@ -189,11 +190,16 @@ lain.widgets.calendar:attach(mytextclock, { font_size = 8 })
 markup = lain.util.markup
 baticon = wibox.widget.imagebox(beautiful.bat)
 batbar = awful.widget.progressbar()
-batbar:set_color(beautiful.fg_normal)
+--batbar:set_color(beautiful.fg_normal)
 batbar:set_width(18)
 batbar:set_ticks(false)
 batbar:set_ticks_size(2)
-batbar:set_background_color(beautiful.bg_normal)
+--batbar:set_background_color(beautiful.bg_normal)
+batbar:buttons (awful.util.table.join (
+          awful.button ({}, 3, function()
+            awful.util.spawn("lxtask", false)
+          end)  ))
+batbar.tooltip = awful.tooltip({ objects = { batbar } })
 batmargin = wibox.layout.margin(batbar, 2, 7)
 batmargin:set_top(7)
 batmargin:set_bottom(7)
@@ -201,9 +207,11 @@ batupd = lain.widgets.bat({
     settings = function()
         if bat_now.perc == "N/A" then
             bat_perc = 100
+            batbar.tooltip:set_text (" no battery present ")
             --baticon:set_image(beautiful.ac)
-        else
+        elseif bat_now.status == "Discharging" then
             bat_perc = tonumber(bat_now.perc)
+            batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... discharging")
             if bat_perc >= 97 then
                 batbar:set_color(green)
             elseif bat_perc > 60 then
@@ -219,6 +227,26 @@ batupd = lain.widgets.bat({
                 batbar:set_color(red)
                -- baticon:set_image(beautiful.bat_no)
             end
+        else
+			bat_perc = tonumber(bat_now.perc)
+			batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... charging")
+            if bat_perc >= 97 then
+                batbar:set_color(green)
+                batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... fully charged")
+            elseif bat_perc > 60 then
+                batbar:set_color(beautiful.fg_normal)
+                --baticon:set_image(beautiful.bat)
+            elseif bat_perc > 30 then
+                batbar:set_color(yellow)
+                --baticon:set_image(beautiful.bat)
+            elseif bat_perc > 15 then
+                batbar:set_color(orange)
+               -- baticon:set_image(beautiful.bat_low)
+            else
+                batbar:set_color(red)
+               -- baticon:set_image(beautiful.bat_no)
+            end
+        
         end
         batbar:set_value(bat_perc / 100)
     end
