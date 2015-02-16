@@ -169,9 +169,9 @@ naughty.config.defaults.position			= "top_center"
 --naughty.config.presets.critical.icon_size	= 64
 --naughty.config.defaults.height			= 16
 --naughty.config.paddingx = 500
-naughty.config.presets.normal.opacity = 0.8
-naughty.config.presets.low.opacity = 0.8
-naughty.config.presets.critical.opacity = 0.8
+naughty.config.presets.normal.opacity 		= 0.9
+naughty.config.presets.low.opacity 			= 0.9
+naughty.config.presets.critical.opacity 	= 0.9
 
 
 
