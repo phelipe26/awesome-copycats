@@ -83,6 +83,14 @@ editor_cmd 		= terminal .. " -e " .. editor
 -- # Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
+--        lain.layout.termfair,
+  --      lain.layout.centerfair,
+    --    lain.layout.cascade,
+      --  lain.layout.cascadetile,
+        --lain.layout.centerwork,
+        --lain.layout.uselessfair,
+        --lain.layout.uselesspiral,
+        --lain.layout.uselesstile,
     awful.layout.suit.floating,			--1
     awful.layout.suit.tile,			--2
     awful.layout.suit.tile.left,		--3
@@ -108,7 +116,7 @@ end
 
 -- {{{ Tags /// changes the name and layout per tag
 tags 	= {
-   names	= { 	" cmd ", " web ", " im ", " office " }, -- for now 4 tags is sufficient, dynamic tagging enabled; more can be added using modkey+Shift+n
+   names	= { 	"  cmd   ", "  web   ", "   im   ", " office " }, --" cmd ", " web ", " im ", " office " }, -- for now 4 tags is sufficient, dynamic tagging enabled; more can be added using modkey+Shift+n
    layout	= { 	layouts[2], layouts[10], layouts[2], layouts[2]	}
 }
 for s = 1, screen.count() do
@@ -153,12 +161,13 @@ markup      = lain.util.markup
 blue  		= beautiful.fg_focus
 red   		= "#EB8F8F"
 green 		= "#00CC66" --"#8FEB8F"
-yellow 		= "#CCFF33" --"#8FEB8F"
+yellow 		= "#DBA600" --"#8FEB8F"
 orange 		= "#FF3300" --"#8FEB8F"
 
 -- # Naughty Notification Settings
-naughty.config.presets.low.icon_size		= 256 			-- set icon-size for notifications
+naughty.config.presets.low.icon_size		= 128--256 			-- set icon-size for notifications
 naughty.config.presets.low.width			= 400
+naughty.config.presets.low.margin			= 5
 naughty.config.defaults.margin				= 25
 naughty.config.defaults.fg					= '#DEDEDE'		--#2b2233' or beautiful.fg_focus
 naughty.config.defaults.bg					= '#2B292E'		--#C2C2C2'	or beautiful.bg_focus
@@ -190,11 +199,11 @@ lain.widgets.calendar:attach(mytextclock, { font_size = 8 })
 markup = lain.util.markup
 baticon = wibox.widget.imagebox(beautiful.bat)
 batbar = awful.widget.progressbar()
---batbar:set_color(beautiful.fg_normal)
-batbar:set_width(18)
+batbar:set_color(beautiful.fg_normal)
+batbar:set_width(17) --18
 batbar:set_ticks(false)
 batbar:set_ticks_size(2)
---batbar:set_background_color(beautiful.bg_normal)
+batbar:set_background_color(beautiful.bg_normal)
 batbar:buttons (awful.util.table.join (
           awful.button ({}, 3, function()
             awful.util.spawn("lxtask", false)
@@ -212,6 +221,7 @@ batupd = lain.widgets.bat({
         elseif bat_now.status == "Discharging" then
             bat_perc = tonumber(bat_now.perc)
             batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... discharging")
+            baticon:set_image(beautiful.xx)
             if bat_perc >= 97 then
                 batbar:set_color(green)
             elseif bat_perc > 60 then
@@ -230,9 +240,10 @@ batupd = lain.widgets.bat({
         else
 			bat_perc = tonumber(bat_now.perc)
 			batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... charging")
+            baticon:set_image(beautiful.bat)
             if bat_perc >= 97 then
                 batbar:set_color(green)
-                batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... fully charged")
+                --batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... fully charged")
             elseif bat_perc > 60 then
                 batbar:set_color(beautiful.fg_normal)
                 --baticon:set_image(beautiful.bat)
@@ -259,9 +270,9 @@ batwidget:set_bgimage(beautiful.batwidget_bg)
 volicon = wibox.widget.imagebox(beautiful.vol)
 volume = lain.widgets.alsabar({
 vertical = false,
-width = 55, 
+width = 40, --55,
 ticks = true, 
-ticks_size = 6, 
+ticks_size = 5, --6,
 timeout = 0.1,
 settings = function()
     if volume_now.status == "off" then
@@ -306,10 +317,12 @@ mypromptbox = {}
 mylayoutbox = {}
 mytaglist = {}
 mytaglist.buttons = awful.util.table.join(
-                    awful.button({ }, 1, awful.tag.viewonly),
-                    awful.button({ modkey }, 1, awful.client.movetotag),
-                    awful.button({ }, 3, awful.tag.viewtoggle),
-                    awful.button({ modkey }, 3, awful.client.toggletag),
+                    --awful.button({ }, 1, awful.tag.viewonly),
+                    --awful.button({ modkey }, 1, awful.client.movetotag),
+                    --awful.button({ }, 3, awful.tag.viewtoggle),
+                    --awful.button({ modkey }, 3, awful.client.toggletag),
+                    awful.button({ }, 1, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
+                    awful.button({ }, 3, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end),
                     awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
                     awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)
                     )
@@ -362,7 +375,7 @@ for s = 1, screen.count() do
                            awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
                            awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
     -- Create a taglist widget
-    mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
+    mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.sel, mytaglist.buttons)
 
     -- Create a tasklist widget
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
@@ -378,13 +391,13 @@ for s = 1, screen.count() do
 	left_layout:add(first)
 	left_layout:add(first)
 	left_layout:add(mylauncher)
-	left_layout:add(first)
+	--left_layout:add(first)
     left_layout:add(mytaglist[s])
     left_layout:add(mypromptbox[s])
     
-    left_layout:add(arrl_pre)
+    --left_layout:add(arrl_pre)
     left_layout:add(mylayoutbox[s])
-    left_layout:add(arrl_post)
+    --left_layout:add(arrl_post)
     left_layout:add(first)
 
     -- Widgets that are aligned to the right
@@ -396,10 +409,10 @@ for s = 1, screen.count() do
     right_layout:add(volumewidget)
     right_layout:add(first)
     right_layout:add(batwidget)
+    right_layout:add(baticon)
     right_layout:add(mytextclock)
 
     -- right_layout:add(alsawidget.bar) -- This is the old Alsa Widget; can be placed vertically
-	--right_layout:add(baticon)
     --right_layout:add(arrl_pre)
     --right_layout:add(mylayoutbox[s])
     --right_layout:add(arrl_post)
@@ -436,8 +449,70 @@ root.buttons(awful.util.table.join(
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
+--	awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
+--	awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
+	
+	awful.key({ modkey,           }, "Left",   
+	function ()
+				awful.tag.viewprev()
+				local screen = mouse.screen
+				local workspace = awful.tag.selected(1).name
+				naughty.notify({ 	
+								
+								preset = {
+									naughty.config.presets.low,
+									timeout = 0.25,
+									opacity = 0.9,
+									width	= 100,
+									--height	= 50,
+									--title = "Workspace",
+									text = workspace 
+									
+									}})
+                  		end),    
+                  		 		
+                  		--#################################
+                  		
+--naughty.config.presets.low.icon_size		= 128--256 			-- set icon-size for notifications
+--naughty.config.presets.low.width			= 400
+--naughty.config.presets.low.margin			= 5
+--naughty.config.defaults.margin				= 25
+--naughty.config.defaults.fg					= '#DEDEDE'		--#2b2233' or beautiful.fg_focus
+--naughty.config.defaults.bg					= '#2B292E'		--#C2C2C2'	or beautiful.bg_focus
+--naughty.config.defaults.border_width		= 0
+--naughty.config.defaults.border_color		= '#2B292E'
+--naughty.config.defaults.hover_timeout    	= nil
+--naughty.config.defaults.position			= "top_center"
+--naughty.config.presets.normal.opacity 		= 0.9
+--naughty.config.presets.low.opacity 			= 0.9
+--naughty.config.presets.critical.opacity 	= 0.9
+--naughty.config.defaults.font				= beautiful.font or "Verdana 8"
+--naughty.config.defaults.screen			= 1
+--naughty.config.presets.critical.icon_size	= 64
+--naughty.config.defaults.height			= 16
+--naughty.config.paddingx					= 500
+                  		
+                  		--#################################
+    
+    awful.key({ modkey,           }, "Right",  
+    	function ()
+				awful.tag.viewnext()
+				local screen = mouse.screen
+				local workspace = awful.tag.selected(1).name
+				naughty.notify({ 	
+								
+								preset = {
+									naughty.config.presets.low,
+									timeout = 0.25,
+									opacity = 0.9,
+									width	= 100,
+									--height	= 50,
+									--title = "Workspace",
+									text = workspace 
+									
+									}})
+                  		end),    
+                  		 		    
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
 
     awful.key({ modkey,           }, "j",
@@ -483,13 +558,15 @@ globalkeys = awful.util.table.join(
 -- # ALSA volume control
     awful.key({ }, "XF86AudioRaiseVolume",
         function ()
-            awful.util.spawn("amixer -q set " .. volume.channel .. " " .. volume.step .. "+", false)
+            awful.util.spawn("amixer set Master 2%+", false)
+            --awful.util.spawn("amixer -q set " .. volume.channel .. " " .. volume.step .. "+", false)
             volume.update()
             volume.notify()
         end),
  awful.key({ }, "XF86AudioLowerVolume",
         function ()
-            awful.util.spawn("amixer -q set " .. volume.channel .. " " .. volume.step .. "-", false)
+            awful.util.spawn("amixer set Master 2%-", false)
+            --awful.util.spawn("amixer -q set " .. volume.channel .. " " .. volume.step .. "-", false)
             volume.update()
             volume.notify()
         end),

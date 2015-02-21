@@ -11,7 +11,7 @@ theme.font							= "Helvetica Neue-Medium 9"
 --theme.taglist_font                  = "Helvetica Neue-Medium 9"
 
 theme.fg_normal						= "#2b2233"		--"#aaaaaa"
-theme.bg_normal						= "#C2C2C2"			--"#0F0F0F" --#193535"  --#222222"  -- background of the wibox
+theme.bg_normal						= "#f0f0f0"--C2C2C2"			--"#0F0F0F" --#193535"  --#222222"  -- background of the wibox
 theme.fg_focus						= "#0000CC"		--#57FEFF"  --#00FFFF"
 theme.bg_focus						= theme.bg_normal		--"#001414" --"#040404" --#535d6c"  -- background of focused window
 theme.fg_urgent						= "#CC0000"
@@ -39,6 +39,7 @@ theme.menu_width  					= 150
 --theme.taglist_squares_sel           = theme.confdir .. "/taglist/square_sel.png"
 --theme.taglist_squares_unsel         = theme.confdir .. "/taglist/square_unsel.png"
 theme.taglist_fg_focus				= "#0000CC"		--#57FEFF"  --#00FFFF"
+theme.taglist_font					= "Ubuntu Mono 10"
 --theme.taglist_bg_focus              = "png:" .. theme.confdir .. "/taglist/taglist_bg_focus.png"
 
 --theme.taglist_fg_focus              = "#dddcff"
