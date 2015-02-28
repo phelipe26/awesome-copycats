@@ -85,7 +85,7 @@ naughty.config.defaults = {
     ontop = true,
     margin = "5",
     border_width = "1",
-    position = "top_right"
+    position = "top_center" --"top_right"
 }
 
 -- DBUS Notification constants
