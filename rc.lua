@@ -11,7 +11,6 @@ local menubar 	= require("lib/menubar")
 -- # User-defined libraries
 local APW 		= require("apw/widget")		-- Volume indicator
 local lain 		= require("lain")
---local systray	= require("systray")
 vicious			= require("vicious")
 
 -- {{{ Error handling
