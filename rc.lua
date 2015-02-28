@@ -1,30 +1,18 @@
 -- Standard awesome library
---local gears 	= require("gears")
---local awful 	= require("awful")
---awful.rules 	= require("awful.rules")
---				  require("awful.autofocus")
---local wibox 	= require("wibox")			-- Widget and layout library
---local beautiful	= require("beautiful")			-- Theme handling library
---local naughty 	= require("naughty")			-- Notification library
---local menubar 	= require("menubar")
-
--- Standard awesome library
-local gears 	= require("lib/gears")
+local gears 	= require("gears")
 local awful 	= require("lib/awful")
 awful.rules 	= require("lib/awful.rules")
-require("awful.autofocus")
+				  require("lib/awful.autofocus")
 local wibox 	= require("lib/wibox")			-- Widget and layout library
-local beautiful	= require("lib/beautiful")			-- Theme handling library
+local beautiful	= require("beautiful")			-- Theme handling library
 local naughty 	= require("lib/naughty")			-- Notification library
 local menubar 	= require("lib/menubar")
 
 -- # User-defined libraries
 local APW 		= require("apw/widget")		-- Volume indicator
 local lain 		= require("lain")
-local systray	= require("systray")
+--local systray	= require("systray")
 vicious			= require("vicious")
-
-
 
 -- {{{ Error handling
 if awesome.startup_errors then
@@ -726,9 +714,10 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
 	right_layout:add(first)
-	--	if s == 1 then right_layout:add(wibox.widget.systray()) end
 	right_layout:add(arrl_pre_light)
-    if s == 1 then right_layout:add(systray()) end
+    --if s == 1 then right_layout:add(systray()) end
+    	if s == 1 then right_layout:add(wibox.widget.systray()) end
+	
     right_layout:add(arrl_post_light)
     right_layout:add(first)
     right_layout:add(volicon)
