@@ -1,18 +1,30 @@
 -- Standard awesome library
-local gears 	= require("gears")
-local awful 	= require("awful")
-awful.rules 	= require("awful.rules")
-				  require("awful.autofocus")
-local wibox 	= require("wibox")			-- Widget and layout library
-local beautiful	= require("beautiful")			-- Theme handling library
-local naughty 	= require("naughty")			-- Notification library
-local menubar 	= require("menubar")
+--local gears 	= require("gears")
+--local awful 	= require("awful")
+--awful.rules 	= require("awful.rules")
+--				  require("awful.autofocus")
+--local wibox 	= require("wibox")			-- Widget and layout library
+--local beautiful	= require("beautiful")			-- Theme handling library
+--local naughty 	= require("naughty")			-- Notification library
+--local menubar 	= require("menubar")
+
+-- Standard awesome library
+local gears 	= require("lib/gears")
+local awful 	= require("lib/awful")
+awful.rules 	= require("lib/awful.rules")
+require("awful.autofocus")
+local wibox 	= require("lib/wibox")			-- Widget and layout library
+local beautiful	= require("lib/beautiful")			-- Theme handling library
+local naughty 	= require("lib/naughty")			-- Notification library
+local menubar 	= require("lib/menubar")
 
 -- # User-defined libraries
 local APW 		= require("apw/widget")		-- Volume indicator
 local lain 		= require("lain")
 local systray	= require("systray")
 vicious			= require("vicious")
+
+
 
 -- {{{ Error handling
 if awesome.startup_errors then
@@ -223,7 +235,7 @@ naughty.config.presets.critical.opacity 	= 0.9
 
 -- # Create a textclock widget
 -- mytextclock = awful.widget.textclock()
-clockicon = wibox.widget.imagebox(beautiful.widget_clock)
+--clockicon = wibox.widget.imagebox(beautiful.widget_clock)
 -- mytextclock = awful.widget.textclock(markup("#7788af", "%A %d %B ") .. markup("#343639", ">") .. markup("#00FFFF", " %H:%M ")) --de5e1e orange, %D: MM/DD/YYYY
 mytextclock = awful.widget.textclock(markup.font("Helvetica Neue-Medium 9", --markup("#2b2233", " %a "--%m/%d ") .. markup("#2b2233", "") .. 
 markup("#7788af", "%R %p "))) --de5e1e orange %b/%d/%y for dec/01/14

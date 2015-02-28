@@ -19,6 +19,7 @@ theme.bg_urgent						= "#ff5050"
 theme.fg_minimize					= "#5E5E5E"
 theme.bg_minimize					= "#00000000"--theme.bg_normal  --"#0F0F0F"		--#0F2020"  --"#444444" -- background of minimized window
 theme.bg_systray					= "#393939"--theme.bg_normal --"#393939"  --#525252"		--theme.bg_normal
+theme.bg_systray					= "#393939"--theme.bg_normal --"#393939"  --#525252"		--theme.bg_normal
 
 -- {{{ Borders
 theme.border_width					= 0
@@ -79,7 +80,7 @@ theme.widget_bg                     = theme.confdir .. "/icons/widget_bg.png"
 theme.batwidget_bg                  = theme.confdir .. "/icons/batwidget_bg.png"
 
 -- theme.widget_batt				= theme.confdir .. "/icons/bat.png"
-theme.widget_clock					= theme.confdir .. "/icons/clock.png"
+--theme.widget_clock					= theme.confdir .. "/icons/clock.png"
 --theme.widget_vol					= theme.confdir .. "/icons/spkr.png"
 theme.widget_ac						= theme.confdir .. "/icons/ac.png"
 theme.widget_battery				= theme.confdir .. "/icons/battery.png"
