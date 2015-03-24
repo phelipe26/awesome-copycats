@@ -11,14 +11,13 @@ theme.font							= "Helvetica Neue-Medium 9"
 --theme.taglist_font                  = "Helvetica Neue-Medium 9"
 
 theme.fg_normal						= "#aaaaaa"--2b2233"		--"#aaaaaa"
-theme.bg_normal						= "#1a1a1ab3"--1a1a1a"		--f0f0f0"--C2C2C2"			--"#0F0F0F" --#193535"  --#222222"  -- background of the wibox
+theme.bg_normal						= "#000000b3"--1a1a1a"		--f0f0f0"--C2C2C2"			--"#0F0F0F" --#193535"  --#222222"  -- background of the wibox
 theme.fg_focus						= "#0000CC"		--#57FEFF"  --#00FFFF"
 theme.bg_focus						= "#00000000"--theme.bg_normal		--"#001414" --"#040404" --#535d6c"  -- background of focused window
 theme.fg_urgent						= "#CC0000"
 theme.bg_urgent						= "#ff5050"
 theme.fg_minimize					= "#5E5E5E"
 theme.bg_minimize					= "#00000000"--theme.bg_normal  --"#0F0F0F"		--#0F2020"  --"#444444" -- background of minimized window
-theme.bg_systray					= "#393939"--theme.bg_normal --"#393939"  --#525252"		--theme.bg_normal
 theme.bg_systray					= "#393939"--theme.bg_normal --"#393939"  --#525252"		--theme.bg_normal
 
 -- {{{ Borders
@@ -53,7 +52,7 @@ theme.taglist_font					= "Webdings 10" --Ubuntu Mono 10"
 
 -- tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
 theme.tooltip_font						= "Helvetica Neue-Medium 9"
-theme.tooltip_opacity					= 0.9
+theme.tooltip_opacity					= 0.85
 theme.tooltip_fg_color					= '#DEDEDE'
 theme.tooltip_bg_color					= '#2B292E'
 theme.tooltip_border_width				= 0

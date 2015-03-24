@@ -1,12 +1,12 @@
 -- Standard awesome library
 local gears 	= require("gears")
-local awful 	= require("awful")
-awful.rules 	= require("awful.rules")
-				  require("awful.autofocus")
-local wibox 	= require("wibox")			-- Widget and layout library
+local awful 	= require("lib/awful")
+awful.rules 	= require("lib/awful.rules")
+				  require("lib/awful.autofocus")
+local wibox 	= require("lib/wibox")			-- Widget and layout library
 local beautiful	= require("beautiful")			-- Theme handling library
-local naughty 	= require("naughty")			-- Notification library
-local menubar 	= require("menubar")
+local naughty 	= require("lib/naughty")			-- Notification library
+local menubar 	= require("lib/menubar")
 
 -- # User-defined libraries
 local APW 		= require("apw/widget")		-- Volume indicator
