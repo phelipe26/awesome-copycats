@@ -204,388 +204,10 @@ markup("#92A1A1", "%R %p "))) --de5e1e orange %b/%d/%y for dec/01/14
 -- # Calendar
 lain.widgets.calendar:attach(mytextclock, { font_size = 8 })
 
--- # Battery {{
-markup = lain.util.markup
-baticon = wibox.widget.imagebox(beautiful.bat)
-batbar = awful.widget.progressbar()
-batbar:set_color(beautiful.fg_normal)
-batbar:set_width(17) --18
-batbar:set_ticks(false)
-batbar:set_ticks_size(2)
-batbar:set_background_color(beautiful.bg_normal)
-batbar:buttons (awful.util.table.join (
-          awful.button ({}, 3, function()
-            awful.util.spawn("lxtask", false)
-          end)  ))
-batbar.tooltip = awful.tooltip({ objects = { batbar } })
-baticon.tooltip = awful.tooltip({ objects = { baticon } })
-batmargin = wibox.layout.margin(batbar, 2, 7)
-batmargin:set_top(7)
-batmargin:set_bottom(7)
-batupd = lain.widgets.bat({
-    settings = function()
-        if bat_now.perc == "N/A" then
-            bat_perc = 100
-            batbar.tooltip:set_text (" no battery present ")
-            --baticon:set_image(beautiful.ac)
-        elseif bat_now.status == "Discharging" then
-            bat_perc = tonumber(bat_now.perc)
-            batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... discharging")
-            baticon.tooltip:set_text (" " .. bat_now.perc .. " % ... discharging")
-            baticon:set_image(beautiful.xx)
-            --if bat_perc >= 97 then
-              --  batbar:set_color(green)
-            --elseif bat_perc > 60 then
-              --  batbar:set_color(beautiful.fg_normal)
-                --baticon:set_image(beautiful.bat)
-            --elseif bat_perc > 30 then
-              --  batbar:set_color(yellow)
-                --baticon:set_image(beautiful.bat)
-            --elseif bat_perc > 15 then
-              --  batbar:set_color(orange)
-               -- baticon:set_image(beautiful.bat_low)
-            --else
-              --  batbar:set_color(red)
-               -- baticon:set_image(beautiful.bat_no)
-            if bat_perc == 0 then -- before 0 vol_no; 0-50 vol_low; 50-96 vol
-        baticon:set_image(beautiful.bat_000)
-    elseif bat_perc <= 2.5 then
-        baticon:set_image(beautiful.bat_001)
- elseif bat_perc <= 5 then
-        baticon:set_image(beautiful.bat_002)
- elseif bat_perc <= 7.5 then
-        baticon:set_image(beautiful.bat_003)
- elseif bat_perc <= 10 then
-        baticon:set_image(beautiful.bat_004)
- elseif bat_perc <= 12.5 then
-        baticon:set_image(beautiful.bat_005)
- elseif bat_perc <= 15 then
-        baticon:set_image(beautiful.bat_006)
- elseif bat_perc <= 17.5 then
-        baticon:set_image(beautiful.bat_007)
- elseif bat_perc <= 20 then
-        baticon:set_image(beautiful.bat_008)
- elseif bat_perc <= 22.5 then
-        baticon:set_image(beautiful.bat_009)
- elseif bat_perc <= 25 then
-        baticon:set_image(beautiful.bat_010)
- elseif bat_perc <= 27.5 then
-        baticon:set_image(beautiful.bat_011)
- elseif bat_perc <= 30 then
-        baticon:set_image(beautiful.bat_012)
- elseif bat_perc <= 32.5 then
-        baticon:set_image(beautiful.bat_013)
- elseif bat_perc <= 35 then
-        baticon:set_image(beautiful.bat_014)
- elseif bat_perc <= 37.5 then
-        baticon:set_image(beautiful.bat_015)
- elseif bat_perc <= 40 then
-        baticon:set_image(beautiful.bat_016)
- elseif bat_perc <= 42.5 then
-        baticon:set_image(beautiful.bat_017)
- elseif bat_perc <= 45 then
-        baticon:set_image(beautiful.bat_018)
- elseif bat_perc <= 47.5 then
-        baticon:set_image(beautiful.bat_019)
- elseif bat_perc <= 50 then
-        baticon:set_image(beautiful.bat_020)
- elseif bat_perc <= 52.5 then
-        baticon:set_image(beautiful.bat_021)
- elseif bat_perc <= 55 then
-        baticon:set_image(beautiful.bat_022)
- elseif bat_perc <= 57.5 then
-        baticon:set_image(beautiful.bat_023)
- elseif bat_perc <= 60 then
-        baticon:set_image(beautiful.bat_024)
- elseif bat_perc <= 62.5 then
-        baticon:set_image(beautiful.bat_025)
- elseif bat_perc <= 65 then
-        baticon:set_image(beautiful.bat_026)
- elseif bat_perc <= 67.5 then
-        baticon:set_image(beautiful.bat_027)
- elseif bat_perc <= 70 then
-        baticon:set_image(beautiful.bat_028)
- elseif bat_perc <= 72.5 then
-        baticon:set_image(beautiful.bat_029)
- elseif bat_perc <= 75 then
-        baticon:set_image(beautiful.bat_030)
- elseif bat_perc <= 77.5 then
-        baticon:set_image(beautiful.bat_031)
- elseif bat_perc <= 80 then
-        baticon:set_image(beautiful.bat_032)
- elseif bat_perc <= 82.5 then
-        baticon:set_image(beautiful.bat_033)
- elseif bat_perc <= 85 then
-        baticon:set_image(beautiful.bat_034)
- elseif bat_perc <= 87.5 then
-        baticon:set_image(beautiful.bat_035)
- elseif bat_perc <= 90 then
-        baticon:set_image(beautiful.bat_036)
- elseif bat_perc <= 92.5 then
-        baticon:set_image(beautiful.bat_037)
- elseif bat_perc <= 95 then
-        baticon:set_image(beautiful.bat_038)
- elseif bat_perc <= 97.5 then
-        baticon:set_image(beautiful.bat_039)
-    else
-        baticon:set_image(beautiful.bat_040)
-            
-            
-            end
-        else
-			bat_perc = tonumber(bat_now.perc)
-			batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... charging")
-			baticon.tooltip:set_text (" " .. bat_now.perc .. " % ... charging")
-            baticon:set_image(beautiful.bat)
-            --if bat_perc >= 97 then
-              --  batbar:set_color(green)
-                --batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... fully charged")
-            --elseif bat_perc > 60 then
-              --  batbar:set_color(beautiful.fg_normal)
-                --baticon:set_image(beautiful.bat)
-            --elseif bat_perc > 30 then
-              --  batbar:set_color(yellow)
-                --baticon:set_image(beautiful.bat)
-            --elseif bat_perc > 15 then
-              --  batbar:set_color(orange)
-               -- baticon:set_image(beautiful.bat_low)
-            --else
-              --  batbar:set_color(red)
-               -- baticon:set_image(beautiful.bat_no)
-                        if bat_perc == 0 then -- before 0 vol_no; 0-50 vol_low; 50-96 vol
-        baticon:set_image(beautiful.bat_000)
-    elseif bat_perc <= 2.5 then
-        baticon:set_image(beautiful.bat_001)
- elseif bat_perc <= 5 then
-        baticon:set_image(beautiful.bat_002)
- elseif bat_perc <= 7.5 then
-        baticon:set_image(beautiful.bat_003)
- elseif bat_perc <= 10 then
-        baticon:set_image(beautiful.bat_004)
- elseif bat_perc <= 12.5 then
-        baticon:set_image(beautiful.bat_005)
- elseif bat_perc <= 15 then
-        baticon:set_image(beautiful.bat_006)
- elseif bat_perc <= 17.5 then
-        baticon:set_image(beautiful.bat_007)
- elseif bat_perc <= 20 then
-        baticon:set_image(beautiful.bat_008)
- elseif bat_perc <= 22.5 then
-        baticon:set_image(beautiful.bat_009)
- elseif bat_perc <= 25 then
-        baticon:set_image(beautiful.bat_010)
- elseif bat_perc <= 27.5 then
-        baticon:set_image(beautiful.bat_011)
- elseif bat_perc <= 30 then
-        baticon:set_image(beautiful.bat_012)
- elseif bat_perc <= 32.5 then
-        baticon:set_image(beautiful.bat_013)
- elseif bat_perc <= 35 then
-        baticon:set_image(beautiful.bat_014)
- elseif bat_perc <= 37.5 then
-        baticon:set_image(beautiful.bat_015)
- elseif bat_perc <= 40 then
-        baticon:set_image(beautiful.bat_016)
- elseif bat_perc <= 42.5 then
-        baticon:set_image(beautiful.bat_017)
- elseif bat_perc <= 45 then
-        baticon:set_image(beautiful.bat_018)
- elseif bat_perc <= 47.5 then
-        baticon:set_image(beautiful.bat_019)
- elseif bat_perc <= 50 then
-        baticon:set_image(beautiful.bat_020)
- elseif bat_perc <= 52.5 then
-        baticon:set_image(beautiful.bat_021)
- elseif bat_perc <= 55 then
-        baticon:set_image(beautiful.bat_022)
- elseif bat_perc <= 57.5 then
-        baticon:set_image(beautiful.bat_023)
- elseif bat_perc <= 60 then
-        baticon:set_image(beautiful.bat_024)
- elseif bat_perc <= 62.5 then
-        baticon:set_image(beautiful.bat_025)
- elseif bat_perc <= 65 then
-        baticon:set_image(beautiful.bat_026)
- elseif bat_perc <= 67.5 then
-        baticon:set_image(beautiful.bat_027)
- elseif bat_perc <= 70 then
-        baticon:set_image(beautiful.bat_028)
- elseif bat_perc <= 72.5 then
-        baticon:set_image(beautiful.bat_029)
- elseif bat_perc <= 75 then
-        baticon:set_image(beautiful.bat_030)
- elseif bat_perc <= 77.5 then
-        baticon:set_image(beautiful.bat_031)
- elseif bat_perc <= 80 then
-        baticon:set_image(beautiful.bat_032)
- elseif bat_perc <= 82.5 then
-        baticon:set_image(beautiful.bat_033)
- elseif bat_perc <= 85 then
-        baticon:set_image(beautiful.bat_034)
- elseif bat_perc <= 87.5 then
-        baticon:set_image(beautiful.bat_035)
- elseif bat_perc <= 90 then
-        baticon:set_image(beautiful.bat_036)
- elseif bat_perc <= 92.5 then
-        baticon:set_image(beautiful.bat_037)
- elseif bat_perc <= 95 then
-        baticon:set_image(beautiful.bat_038)
- elseif bat_perc <= 97.5 then
-        baticon:set_image(beautiful.bat_039)
-    else
-        baticon:set_image(beautiful.bat_040)            
-            end
-        
-        end
-        batbar:set_value(bat_perc / 100)
-    end
-})
-batwidget = wibox.widget.background(batmargin)
-batwidget:set_bgimage(beautiful.batwidget_bg)
---}}
-			     
--- # ALSA volume bar {{
-volicon = wibox.widget.imagebox(beautiful.vol)
-    volicon:buttons (awful.util.table.join (
-          awful.button ({}, 3, function()
-            awful.util.spawn(lain.widgets.alsabar.mixer, false)
-            --awful.util.spawn ("pavucontrol", false)
-          end),
-          awful.button ({}, 1, function()
-            awful.util.spawn(string.format("amixer set %s toggle", lain.widgets.alsabar.channel), false)
-            lain.widgets.alsabar.update()
-            --volume.update()
-            --volume.notify()
-          end),
-          awful.button ({}, 4, function()
-            awful.util.spawn(string.format("amixer set %s %s+", lain.widgets.alsabar.channel, lain.widgets.alsabar.step), false)
-            lain.widgets.alsabar.update()
-            --volume.update()
-            --volume.notify()
-          end),
-          awful.button ({}, 5, function()
-            awful.util.spawn(string.format("amixer set %s %s-", lain.widgets.alsabar.channel, lain.widgets.alsabar.step), false)
-            lain.widgets.alsabar.update()
-            --volume.update()
-            --volume.notify()
-          end)
-    ))
-volicon.tooltip = awful.tooltip({ objects = { volicon } })
 
-vertical = false,
-width = 40, --55,
-ticks = true, 
-ticks_size = 5, --6,
-timeout = 0.1,
-settings = function()
-    if volume_now.status == "off" then
-        volicon:set_image(beautiful.c_mute)
-    elseif volume_now.level == 0 then -- before 0 vol_no; 0-50 vol_low; 50-96 vol
-        volicon:set_image(beautiful.c_000)
-    elseif volume_now.level <= 2.5 then
-        volicon:set_image(beautiful.c_001)
- elseif volume_now.level <= 5 then
-        volicon:set_image(beautiful.c_002)
- elseif volume_now.level <= 7.5 then
-        volicon:set_image(beautiful.c_003)
- elseif volume_now.level <= 10 then
-        volicon:set_image(beautiful.c_004)
- elseif volume_now.level <= 12.5 then
-        volicon:set_image(beautiful.c_005)
- elseif volume_now.level <= 15 then
-        volicon:set_image(beautiful.c_006)
- elseif volume_now.level <= 17.5 then
-        volicon:set_image(beautiful.c_007)
- elseif volume_now.level <= 20 then
-        volicon:set_image(beautiful.c_008)
- elseif volume_now.level <= 22.5 then
-        volicon:set_image(beautiful.c_009)
- elseif volume_now.level <= 25 then
-        volicon:set_image(beautiful.c_010)
- elseif volume_now.level <= 27.5 then
-        volicon:set_image(beautiful.c_011)
- elseif volume_now.level <= 30 then
-        volicon:set_image(beautiful.c_012)
- elseif volume_now.level <= 32.5 then
-        volicon:set_image(beautiful.c_013)
- elseif volume_now.level <= 35 then
-        volicon:set_image(beautiful.c_014)
- elseif volume_now.level <= 37.5 then
-        volicon:set_image(beautiful.c_015)
- elseif volume_now.level <= 40 then
-        volicon:set_image(beautiful.c_016)
- elseif volume_now.level <= 42.5 then
-        volicon:set_image(beautiful.c_017)
- elseif volume_now.level <= 45 then
-        volicon:set_image(beautiful.c_018)
- elseif volume_now.level <= 47.5 then
-        volicon:set_image(beautiful.c_019)
- elseif volume_now.level <= 50 then
-        volicon:set_image(beautiful.c_020)
- elseif volume_now.level <= 52.5 then
-        volicon:set_image(beautiful.c_021)
- elseif volume_now.level <= 55 then
-        volicon:set_image(beautiful.c_022)
- elseif volume_now.level <= 57.5 then
-        volicon:set_image(beautiful.c_023)
- elseif volume_now.level <= 60 then
-        volicon:set_image(beautiful.c_024)
- elseif volume_now.level <= 62.5 then
-        volicon:set_image(beautiful.c_025)
- elseif volume_now.level <= 65 then
-        volicon:set_image(beautiful.c_026)
- elseif volume_now.level <= 67.5 then
-        volicon:set_image(beautiful.c_027)
- elseif volume_now.level <= 70 then
-        volicon:set_image(beautiful.c_028)
- elseif volume_now.level <= 72.5 then
-        volicon:set_image(beautiful.c_029)
- elseif volume_now.level <= 75 then
-        volicon:set_image(beautiful.c_030)
- elseif volume_now.level <= 77.5 then
-        volicon:set_image(beautiful.c_031)
- elseif volume_now.level <= 80 then
-        volicon:set_image(beautiful.c_032)
- elseif volume_now.level <= 82.5 then
-        volicon:set_image(beautiful.c_033)
- elseif volume_now.level <= 85 then
-        volicon:set_image(beautiful.c_034)
- elseif volume_now.level <= 87.5 then
-        volicon:set_image(beautiful.c_035)
- elseif volume_now.level <= 90 then
-        volicon:set_image(beautiful.c_036)
- elseif volume_now.level <= 92.5 then
-        volicon:set_image(beautiful.c_037)
- elseif volume_now.level <= 95 then
-        volicon:set_image(beautiful.c_038)
- elseif volume_now.level <= 97.5 then
-        volicon:set_image(beautiful.c_039)
-    else
-        volicon:set_image(beautiful.c_040)
-    end
-    if volume_now.status == "off" then
-	volicon.tooltip:set_text ("Master: " .. volume_now.level .. "% [Muted]")
-	else
-	volicon.tooltip:set_text ("Master: " .. volume_now.level .. "% ")
-    end
-   end,
-colors =
-{
-    background = beautiful.bg_normal,
-    mute = red,
-    unmute = beautiful.fg_normal
-}})
-volmargin = wibox.layout.margin(volume.bar, 2, 7)
-volmargin:set_top(6)
-volmargin:set_bottom(6)
-volumewidget = wibox.widget.background(volmargin)
-volumewidget:set_bgimage(beautiful.widget_bg)
---}}
+--{{{ CPU circle widget
 
-
-
-
-	nbcpu=0
+nbcpu=0
 	for line in io.lines("/proc/cpuinfo") do
 		for key , value in string.gmatch(line, "processor") do
 			   nbcpu=nbcpu+1
@@ -609,7 +231,7 @@ vicious.register(cpu_circle, vicious.widgets.cpu,'$1',2) -- second number is tim
 cpu_circle.tooltip = awful.tooltip({ objects = { cpu_circle } })
 cpu_circle.tooltip:set_text (nbcpu)
 
-
+--}}}
 
 
 
@@ -645,8 +267,8 @@ vol_circle = blingbling.wlourf_circle_graph({radius= 7, height = 18, width = 36,
             --volume.notify()
           end)
     ))
+    
 vol_circle.tooltip = awful.tooltip({ objects = { vol_circle } })
-
 
 --set the value directly
 vol_timer = timer({ timeout = 0.1 })
@@ -674,18 +296,20 @@ vol_timer:start()
 -- {{{ Battery Widget - pure lua
 
 bat_circle = blingbling.wlourf_circle_graph({radius= 7, height = 18, width = 36, show_text = true, label = "", h_margin = 4, v_margin = 0 --[[, font = {family = "Times New Roman", slang = "italic", weight = "bold"}]]})
---vol_circle:set_graph_colors({{"#00eeddff",0}, --all value > 0 will be displayed using this color
---                       {"#d4aa00ff", 0.5},
---                       {"#d45500ff",0.77}})
-
 --    bat_circle:buttons (awful.util.table.join (
 --          awful.button ({}, 3, function()
 --            awful.util.spawn("lxtask", false)
 --          end)  )
 --    )
+
 bat_circle.tooltip = awful.tooltip({ objects = { bat_circle } })
 
 --set the value directly
+batupd = lain.widgets.bat({
+    settings = function()
+            bat_perc = bat_now.perc
+            end
+})
 bat_timer = timer({ timeout = 2 })
 bat_timer:connect_signal("timeout", function() 
 		bat_circle:add_value(bat_perc/100) 
@@ -719,7 +343,7 @@ bat_timer:start()
 
 
 -- # Separators
-first = wibox.widget.textbox('<span font="Helvetica Neue 10"> </span>')
+first = wibox.widget.textbox('<span font="Monospace 10"> </span>')
 --spacer = wibox.widget.textbox('<span font="Monospace 10">              </span>')
 arrl_pre = wibox.widget.imagebox()
 arrl_pre:set_image(beautiful.arrl_lr_pre)
