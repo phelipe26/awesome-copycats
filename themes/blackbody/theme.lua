@@ -1,6 +1,14 @@
 ﻿---------------------------
 -- blackbody awesome theme --
 ---------------------------
+--theme colors:
+--	dark:			#141212
+--	lighter dark:	#1a1a1a --262222
+--	highlight main:	#2300FF	
+--	highlight2:		#
+--	light:			#92A1A1
+--	very light:		#D4D1D1
+
 
 theme = {}
 
@@ -10,21 +18,21 @@ theme.wallpaper 					= theme.confdir .. "/background.png"
 theme.font							= "Helvetica Neue-Medium 9"
 --theme.taglist_font                  = "Helvetica Neue-Medium 9"
 
-theme.fg_normal						= "#aaaaaa"--2b2233"		--"#aaaaaa"
-theme.bg_normal						= "#000000b3"--1a1a1a"		--f0f0f0"--C2C2C2"			--"#0F0F0F" --#193535"  --#222222"  -- background of the wibox
-theme.fg_focus						= "#0000CC"		--#57FEFF"  --#00FFFF"
+theme.fg_normal						= "#92A1A1"--2b2233"		--"#aaaaaa"
+theme.bg_normal						= "#00000000" --b3"--1a1a1a"		--f0f0f0"--C2C2C2"			--"#0F0F0F" --#193535"  --#222222"  -- background of the wibox
+theme.fg_focus						= "#2300FF"		--#57FEFF"  --#00FFFF"
 theme.bg_focus						= "#00000000"--theme.bg_normal		--"#001414" --"#040404" --#535d6c"  -- background of focused window
 theme.fg_urgent						= "#CC0000"
 theme.bg_urgent						= "#ff5050"
-theme.fg_minimize					= "#5E5E5E"
+theme.fg_minimize					= "#92A1A1"
 theme.bg_minimize					= "#00000000"--theme.bg_normal  --"#0F0F0F"		--#0F2020"  --"#444444" -- background of minimized window
-theme.bg_systray					= "#393939"--theme.bg_normal --"#393939"  --#525252"		--theme.bg_normal
+theme.bg_systray					= "#c5c5c5"--theme.bg_normal --"#393939"  --#525252"		--theme.bg_normal
 
 -- {{{ Borders
 theme.border_width					= 0
-theme.border_normal					= "#3F3F3F"
-theme.border_focus					= "#6F6F6F"
-theme.border_marked					= "#CC9393"
+theme.border_normal					= "#3F3F3F00"
+theme.border_focus					= "#6F6F6F00"
+theme.border_marked					= "#CC939300"
 -- }}}
 
 theme.menu_submenu_icon				= theme.confdir .. "/icons/submenu.png"
@@ -196,6 +204,9 @@ theme.arrl_lr_pre_light             = theme.confdir .. "/icons/arrl_lr_pre_light
 theme.arrl_lr_post                  = theme.confdir .. "/icons/arrl_lr_post.png"
 theme.arrl_lr_post_light            = theme.confdir .. "/icons/arrl_lr_post_light.png"
 -- }}}
+theme.tray_spacer            = theme.confdir .. "/icons/tray_spacer.png"
+theme.spacer		         = theme.confdir .. "/icons/spacer.png"
+
 
 -- {{{ Titlebars
 theme.titlebar_bg_focus				= "#040404"
@@ -229,7 +240,7 @@ theme.titlebar_maximized_button_focus_active	= theme.confdir .. "/titlebar/maxim
 
 -- Define the icon theme for application icons. If not set then the icons 
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.
-theme.icon_theme 					= nil
+theme.icon_theme 					= "/home/philipp/.icons/MBuntu-OSX"
 
 return theme
 -- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80

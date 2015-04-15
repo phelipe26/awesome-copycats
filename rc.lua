@@ -11,7 +11,10 @@ local menubar 	= require("lib/menubar")
 -- # User-defined libraries
 local lain 		= require("lain")
 vicious			= require("vicious")
-
+alttab 			= require("widgets/alttab")
+blingbling		= require("blingbling")
+local launchbar = require("launchbar")
+local mylaunchbar = launchbar("/home/philipp/.config/")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -62,11 +65,12 @@ run_once("ibus-daemon &")
 run_once("firefox &", "startup_instance", nil, 1)
 --os.execute("pidgin &")
 --run_once("skype &")
---run_once("pidgin &")
+run_once("stalonetray &")
 --run_once("owncloud-client &")
 
 awful.util.spawn_with_shell("xscreensaver -nosplash &")
-awful.util.spawn_with_shell("compton -b &") -- -c for shadows
+awful.util.spawn_with_shell("compton --config ~/.compton.conf -b") --compton -b &") -- -c for shadows
+
 --awful.util.spawn_with_shell("xcompmgr -cF &")
 awful.util.spawn_with_shell("sudo hdparm -B 254 /dev/sda &")
 -- }}}
@@ -195,7 +199,7 @@ naughty.config.presets.critical.opacity 	= 0.9
 
 -- Create a textclock widget
 mytextclock = awful.widget.textclock(markup.font("Helvetica Neue-Medium 9", --markup("#2b2233", " %a "--%m/%d ") .. markup("#2b2233", "") .. 
-markup("#7788af", "%R %p "))) --de5e1e orange %b/%d/%y for dec/01/14
+markup("#92A1A1", "%R %p "))) --de5e1e orange %b/%d/%y for dec/01/14
 
 -- # Calendar
 lain.widgets.calendar:attach(mytextclock, { font_size = 8 })
@@ -467,7 +471,7 @@ volicon = wibox.widget.imagebox(beautiful.vol)
           end)
     ))
 volicon.tooltip = awful.tooltip({ objects = { volicon } })
-volume = lain.widgets.alsabar({
+
 vertical = false,
 width = 40, --55,
 ticks = true, 
@@ -578,8 +582,145 @@ volumewidget = wibox.widget.background(volmargin)
 volumewidget:set_bgimage(beautiful.widget_bg)
 --}}
 
+
+
+
+	nbcpu=0
+	for line in io.lines("/proc/cpuinfo") do
+		for key , value in string.gmatch(line, "processor") do
+			   nbcpu=nbcpu+1
+		end
+	end
+	
+cpu_circle = blingbling.wlourf_circle_graph({radius= 7, height = 18, width = 36, show_text = true, label = "", h_margin = 4, v_margin = 0 --[[, font = {family = "Times New Roman", slang = "italic", weight = "bold"}]]})
+cpu_circle:set_graph_colors({{"#f9f9f9ff",0}, --all value > 0 will be displayed using this color
+                       {"#d4aa00ff", 0.5},
+                       {"#d45500ff",0.77}})
+cpu_circle:buttons (awful.util.table.join (
+          awful.button ({}, 3, function()
+            awful.util.spawn("lxtask", false)
+          end)  )
+    )
+--set the value directly
+--cpu_circle:add_value(0.5)
+--or use vicious
+blabla = lain.widgets.cpu({})
+vicious.register(cpu_circle, vicious.widgets.cpu,'$1',2) -- second number is timeout
+cpu_circle.tooltip = awful.tooltip({ objects = { cpu_circle } })
+cpu_circle.tooltip:set_text (nbcpu)
+
+
+
+
+
+
+-- {{{ Volume Widget - pure lua
+volume = lain.widgets.alsabar({})
+vol_circle = blingbling.wlourf_circle_graph({radius= 7, height = 18, width = 36, show_text = true, label = "", h_margin = 4, v_margin = 0 --[[, font = {family = "Times New Roman", slang = "italic", weight = "bold"}]]})
+--vol_circle:set_graph_colors({{"#00eeddff",0}, --all value > 0 will be displayed using this color
+--                       {"#d4aa00ff", 0.5},
+--                       {"#d45500ff",0.77}})
+
+    vol_circle:buttons (awful.util.table.join (
+          awful.button ({}, 3, function()
+            awful.util.spawn(lain.widgets.alsabar.mixer, false)
+            --awful.util.spawn ("pavucontrol", false)
+          end),
+          awful.button ({}, 1, function()
+            awful.util.spawn(string.format("amixer set %s toggle", lain.widgets.alsabar.channel), false)
+            lain.widgets.alsabar.update()
+            --volume.update()
+            --volume.notify()
+          end),
+          awful.button ({}, 4, function()
+            awful.util.spawn(string.format("amixer set %s %s+", lain.widgets.alsabar.channel, lain.widgets.alsabar.step), false)
+            lain.widgets.alsabar.update()
+            --volume.update()
+            --volume.notify()
+          end),
+          awful.button ({}, 5, function()
+            awful.util.spawn(string.format("amixer set %s %s-", lain.widgets.alsabar.channel, lain.widgets.alsabar.step), false)
+            lain.widgets.alsabar.update()
+            --volume.update()
+            --volume.notify()
+          end)
+    ))
+vol_circle.tooltip = awful.tooltip({ objects = { vol_circle } })
+
+
+--set the value directly
+vol_timer = timer({ timeout = 0.1 })
+vol_timer:connect_signal("timeout", function() 
+		vol_circle:add_value(volume_now.level/100) 
+		 if volume_now.status == "off" then
+	vol_circle.tooltip:set_text ("Master: " .. volume_now.level .. "% [Muted]")
+	vol_circle:set_graph_colors({{"#E82F2F",0}})
+	else
+	vol_circle.tooltip:set_text ("Master: " .. volume_now.level .. "% ")
+	vol_circle:set_graph_colors({{"#00eeddff",0}, --all value > 0 will be displayed using this color
+                       {"#d4aa00ff", 0.5},
+                       {"#d45500ff",0.77}})
+    end
+		end)
+vol_timer:start()
+
+--or use vicious
+--vicious.register(circle, vicious.widgets.cpu,'$1',2)
+--}}}
+
+
+
+
+-- {{{ Battery Widget - pure lua
+
+bat_circle = blingbling.wlourf_circle_graph({radius= 7, height = 18, width = 36, show_text = true, label = "", h_margin = 4, v_margin = 0 --[[, font = {family = "Times New Roman", slang = "italic", weight = "bold"}]]})
+--vol_circle:set_graph_colors({{"#00eeddff",0}, --all value > 0 will be displayed using this color
+--                       {"#d4aa00ff", 0.5},
+--                       {"#d45500ff",0.77}})
+
+--    bat_circle:buttons (awful.util.table.join (
+--          awful.button ({}, 3, function()
+--            awful.util.spawn("lxtask", false)
+--          end)  )
+--    )
+bat_circle.tooltip = awful.tooltip({ objects = { bat_circle } })
+
+--set the value directly
+bat_timer = timer({ timeout = 2 })
+bat_timer:connect_signal("timeout", function() 
+		bat_circle:add_value(bat_perc/100) 
+		if bat_now.perc == "N/A" then
+            bat_perc = 100
+            batbar.tooltip:set_text (" no battery present ")
+				bat_circle:set_graph_colors({{"#E82F2F",0}})
+		elseif bat_now.status == "Discharging" then
+            bat_perc = tonumber(bat_now.perc)
+            bat_circle.tooltip:set_text (" " .. bat_now.perc .. " % ... discharging")
+            bat_circle:set_graph_colors({
+						{"#E82F2F",0}, --all value > 0 will be displayed using this color
+						{"#d4aa00", 0.15},
+						{"#BFBFBF",0.30},
+						{"#2FE86D",0.96}})
+        else
+			bat_perc = tonumber(bat_now.perc)
+			bat_circle.tooltip:set_text (" " .. bat_now.perc .. " % ... charging")
+			bat_circle:set_graph_colors({
+						{"#E82F2F",0}, --all value > 0 will be displayed using this color
+						{"#2FE86D", 0.10}})
+						end
+		end)
+bat_timer:start()
+
+--or use vicious
+--vicious.register(circle, vicious.widgets.cpu,'$1',2)
+--}}}
+
+
+
+
 -- # Separators
 first = wibox.widget.textbox('<span font="Helvetica Neue 10"> </span>')
+--spacer = wibox.widget.textbox('<span font="Monospace 10">              </span>')
 arrl_pre = wibox.widget.imagebox()
 arrl_pre:set_image(beautiful.arrl_lr_pre)
 arrl_pre_light = wibox.widget.imagebox()
@@ -589,10 +730,18 @@ arrl_post:set_image(beautiful.arrl_lr_post)
 arrl_post_light = wibox.widget.imagebox()
 arrl_post_light:set_image(beautiful.arrl_lr_post_light)
 
+tray_spacer = wibox.widget.imagebox()
+tray_spacer:set_image(beautiful.tray_spacer)
+
+spacer = wibox.widget.imagebox()
+spacer:set_image(beautiful.spacer)
+
+
 --############################################DONT TOUCH##########################################
 
 -- Create a wibox for each screen and add it
 mywibox = {}
+--mywibox_wsp = {}
 mypromptbox = {}
 mylayoutbox = {}
 mytaglist = {}
@@ -662,30 +811,33 @@ for s = 1, screen.count() do
 
     -- Create the wibox
     mywibox[s] = awful.wibox({ position = "top", height = "20", screen = s, border_width = 0})
+--    mywibox_wsp[s] = awful.wibox({ position = "bottom", height = "80", screen = s, border_width = 0})
   
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
-    left_layout:add(first)
+    left_layout:add(spacer)
     left_layout:add(mytaglist[s])
+    --left_layout:add(mylaunchbar)
     left_layout:add(mypromptbox[s])
-    left_layout:add(first)
+    left_layout:add(spacer)
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    right_layout:add(first)
-	right_layout:add(arrl_pre_light)
-    --if s == 1 then right_layout:add(systray()) end
-    	if s == 1 then right_layout:add(wibox.widget.systray()) end
-	
-    right_layout:add(arrl_post_light)
-    right_layout:add(first)
-    right_layout:add(volicon)
-    --right_layout:add(volumewidget)
-    right_layout:add(first)
-    --right_layout:add(batwidget)
-    right_layout:add(baticon)
+    right_layout:add(tray_spacer)
+	--right_layout:add(arrl_pre)
+    ----if s == 1 then right_layout:add(systray()) end
+    --	if s == 1 then right_layout:add(wibox.widget.systray()) end
+	--right_layout:add(arrl_post)
     right_layout:add(mylayoutbox[s])
-    right_layout:add(first)
+    right_layout:add(spacer)
+    --right_layout:add(volicon)
+    right_layout:add(vol_circle)
+    --right_layout:add(volumewidget)
+    --right_layout:add(batwidget)
+    --right_layout:add(baticon)
+    right_layout:add(bat_circle)
+    right_layout:add(cpu_circle)
+    right_layout:add(spacer)
     --right_layout:add(mytaglist[s])
     right_layout:add(mytextclock)
 	right_layout:add(mylauncher)
@@ -696,7 +848,12 @@ for s = 1, screen.count() do
     layout:set_middle(mytasklist[s])
     layout:set_right(right_layout)
 
+	local layout_wsp = wibox.layout.align.horizontal()
+	layout_wsp:set_left(mytaglist[s])
+
     mywibox[s]:set_widget(layout)
+--    mywibox_wsp[s]:set_widget(layout_wsp)
+--    mywibox_wsp[mouse.screen].visible=false
 end
 -- }}}
 
@@ -828,6 +985,21 @@ globalkeys = awful.util.table.join(
             volume.update()
             volume.notify()
         end),
+        
+-- ALT+Tab
+
+awful.key({ "Mod1",           }, "Tab",                                                      
+       function ()                                                                              
+          alttab.switch(1, "Alt_L", "Tab", "ISO_Left_Tab")                                             
+       end                                                                                      
+   ),                                                                                           
+                                                                                                
+   awful.key({ "Mod1", "Shift"   }, "Tab",                                                      
+       function ()                                                                              
+          alttab.switch(-1, "Alt_L", "Tab", "ISO_Left_Tab")                                            
+       end                                                                                      
+   ),
+
 
 -- # Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
@@ -846,6 +1018,7 @@ globalkeys = awful.util.table.join(
 -- # Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
+    awful.key({ modkey, "Control" }, "r", function () awful.util.spawn("pkill stalonetray") end),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end),
@@ -879,7 +1052,7 @@ clientkeys = awful.util.table.join(
 -- # toggle titlebar/wibox
 	awful.key({ modkey, "Shift" }, "t", awful.titlebar.toggle),
 	awful.key({ }, "Menu", function ()
-		mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible
+		mywibox_wsp[mouse.screen].visible = not mywibox_wsp[mouse.screen].visible
 		end),
 
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
@@ -993,6 +1166,16 @@ properties = { border_width = beautiful.border_width,
      properties = { floating = true } },
    }
 -- }}}
+
+
+--  if mouse.coords ().y > 3 and mouse.coords ().x > 3 then
+--       mywibox_wsp[mouse.screen].visible=false
+--    else
+--       mywibox_wsp[mouse.screen].visible=true
+--    end
+
+
+
 
 --#################################################DONT TOUCH####################################################
 
