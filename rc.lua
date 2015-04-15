@@ -76,7 +76,7 @@ awful.util.spawn_with_shell("sudo hdparm -B 254 /dev/sda &")
 -- }}}
 
 -- {{{ Variable definitions
-beautiful.init(awful.util.getdir("config") .. "/themes/blackbody/theme.lua")	--default theme, as of now:customized
+beautiful.init(awful.util.getdir("config") .. "/themes/transmission/theme.lua")	--default theme, as of now:customized
 
 -- # Common
 modkey 			= "Mod4"							-- Default modkey.
@@ -115,10 +115,10 @@ end
 tags = {
 	names = { "| cmd  |", "| web  |", "|  im  |", "|office|" },--"α","β","γ","δ"},
 	layout	= { 	layouts[2], layouts[10], layouts[2], layouts[2]	},
-	icons = {	"/home/philipp/.config/awesome/themes/blackbody/icons/cmd.png",
-				"/home/philipp/.config/awesome/themes/blackbody/icons/web.png",
-				"/home/philipp/.config/awesome/themes/blackbody/icons/im.png",
-				"/home/philipp/.config/awesome/themes/blackbody/icons/office.png"}
+	icons = {	"/home/philipp/.config/awesome/themes/transmission/icons/cmd.png",
+				"/home/philipp/.config/awesome/themes/transmission/icons/web.png",
+				"/home/philipp/.config/awesome/themes/transmission/icons/im.png",
+				"/home/philipp/.config/awesome/themes/transmission/icons/office.png"}
 	}
     -- Each screen has its own tag table.
 for s = 1, screen.count() do

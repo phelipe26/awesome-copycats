@@ -9,11 +9,16 @@ local naughty 	= require("lib/naughty")			-- Notification library
 local menubar 	= require("lib/menubar")
 
 -- # User-defined libraries
-local APW 		= require("apw/widget")		-- Volume indicator
 local lain 		= require("lain")
 vicious			= require("vicious")
+alttab 			= require("widgets/alttab")
+blingbling		= require("blingbling")
+local launchbar = require("launchbar")
+local mylaunchbar = launchbar("/home/philipp/.config/")
 
 -- {{{ Error handling
+-- Check if awesome encountered an error during startup and fell back to
+-- another config (This code will only ever execute for the fallback config)
 if awesome.startup_errors then
     naughty.notify({ preset = naughty.config.presets.critical,
                      title = "Oops, there were errors during startup!",
@@ -55,23 +60,22 @@ end
 
 -- {{{ Autostart applications
 run_once("nm-applet &")
-run_once("conky -c ~/.conky/conky.conf &")
+--run_once("conky -c ~/.conky/conky.conf &")
 run_once("ibus-daemon &")
 run_once("firefox &", "startup_instance", nil, 1)
+--os.execute("pidgin &")
 --run_once("skype &")
-run_once("pidgin &")
-run_once("owncloud-client &")
+run_once("stalonetray &")
+--run_once("owncloud-client &")
 
 awful.util.spawn_with_shell("xscreensaver -nosplash &")
-awful.util.spawn_with_shell("compton -b &") -- -c for shadows
+awful.util.spawn_with_shell("compton --config ~/.compton.conf -b") --compton -b &") -- -c for shadows
+
 --awful.util.spawn_with_shell("xcompmgr -cF &")
 awful.util.spawn_with_shell("sudo hdparm -B 254 /dev/sda &")
---os.execute("hdparm -B 254 /dev/sda &")
 -- }}}
 
 -- {{{ Variable definitions
-
--- # Theme directory
 beautiful.init(awful.util.getdir("config") .. "/themes/blackbody/theme.lua")	--default theme, as of now:customized
 
 -- # Common
@@ -80,29 +84,21 @@ terminal 		= "xfce4-terminal"					--default terminal
 editor 			= os.getenv("EDITOR") or "nano"
 editor_cmd 		= terminal .. " -e " .. editor
 
--- # Table of layouts to cover with awful.layout.inc, order matters.
+-- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
---        lain.layout.termfair,
-  --      lain.layout.centerfair,
-    --    lain.layout.cascade,
-      --  lain.layout.cascadetile,
-        --lain.layout.centerwork,
-        --lain.layout.uselessfair,
-        --lain.layout.uselesspiral,
-        --lain.layout.uselesstile,
-    awful.layout.suit.floating,			--1
-    awful.layout.suit.tile,			--2
-    awful.layout.suit.tile.left,		--3
-    awful.layout.suit.tile.bottom,		--4
-    awful.layout.suit.tile.top,			--5
-    awful.layout.suit.fair,			--6
-    awful.layout.suit.fair.horizontal,		--7
-    awful.layout.suit.spiral,			--8
-    awful.layout.suit.spiral.dwindle,		--9
-    awful.layout.suit.max,			--10
-    awful.layout.suit.max.fullscreen,		--11
-    awful.layout.suit.magnifier			--12
+    awful.layout.suit.floating,
+    awful.layout.suit.tile,
+    awful.layout.suit.tile.left,
+    awful.layout.suit.tile.bottom,
+    awful.layout.suit.tile.top,
+    awful.layout.suit.fair,
+    awful.layout.suit.fair.horizontal,
+    awful.layout.suit.spiral,
+    awful.layout.suit.spiral.dwindle,
+    awful.layout.suit.max,
+    awful.layout.suit.max.fullscreen,
+    awful.layout.suit.magnifier
 }
 -- }}}
 
@@ -113,9 +109,6 @@ if beautiful.wallpaper then
     end
 end
 -- }}}
-
-
-
 
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
@@ -136,26 +129,11 @@ for s = 1, screen.count() do
       awful.tag.setproperty(t, "icon_only", 1)
   end
 end
-
-
--- {{{ Tags /// changes the name and layout per tag
---tags 	= {
---   names	= { 	"| cmd  |", "| web  |", "|  im  |", "|office|" }, --" cmd ", " web ", " im ", " office " }, -- for now 4 tags is sufficient, dynamic tagging enabled; more can be added using modkey+Shift+n
---   layout	= { 	layouts[2], layouts[10], layouts[2], layouts[2]	}
---}
---for s = 1, screen.count() do
---		tags[s] = awful.tag(tags.names, s, tags.layout)
-----	tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1]) --default: no labels, 1 layout for all
---end
---}}}
+-- }}}
 
 -- {{{ Menu
 -- Create a laucher widget and a main menu
 myawesomemenu = {
-   --{ "manual", terminal .. " -e man awesome" },
-   --{ "edit config", editor_cmd .. " " .. awesome.conffile },
-   --{ "restart", awesome.restart },
-   --{ "quit", awesome.quit }
 		{ "terminal", terminal },
 		{ "task manager", "lxtask" },
 		{ "firefox", "firefox" },
@@ -219,260 +197,53 @@ naughty.config.presets.critical.opacity 	= 0.9
 --naughty.config.defaults.height			= 16
 --naughty.config.paddingx					= 500
 
-
--- # Create a textclock widget
--- mytextclock = awful.widget.textclock()
---clockicon = wibox.widget.imagebox(beautiful.widget_clock)
--- mytextclock = awful.widget.textclock(markup("#7788af", "%A %d %B ") .. markup("#343639", ">") .. markup("#00FFFF", " %H:%M ")) --de5e1e orange, %D: MM/DD/YYYY
+-- Create a textclock widget
 mytextclock = awful.widget.textclock(markup.font("Helvetica Neue-Medium 9", --markup("#2b2233", " %a "--%m/%d ") .. markup("#2b2233", "") .. 
-markup("#7788af", "%R %p "))) --de5e1e orange %b/%d/%y for dec/01/14
+markup("#92A1A1", "%R %p "))) --de5e1e orange %b/%d/%y for dec/01/14
 
 -- # Calendar
 lain.widgets.calendar:attach(mytextclock, { font_size = 8 })
 
--- # Battery {{
-markup = lain.util.markup
-baticon = wibox.widget.imagebox(beautiful.bat)
-batbar = awful.widget.progressbar()
-batbar:set_color(beautiful.fg_normal)
-batbar:set_width(17) --18
-batbar:set_ticks(false)
-batbar:set_ticks_size(2)
-batbar:set_background_color(beautiful.bg_normal)
-batbar:buttons (awful.util.table.join (
+
+--{{{ CPU circle widget
+
+nbcpu=0
+	for line in io.lines("/proc/cpuinfo") do
+		for key , value in string.gmatch(line, "processor") do
+			   nbcpu=nbcpu+1
+		end
+	end
+	
+cpu_circle = blingbling.wlourf_circle_graph({radius= 7, height = 18, width = 36, show_text = true, label = "", h_margin = 4, v_margin = 0 --[[, font = {family = "Times New Roman", slang = "italic", weight = "bold"}]]})
+cpu_circle:set_graph_colors({{"#f9f9f9ff",0}, --all value > 0 will be displayed using this color
+                       {"#d4aa00ff", 0.5},
+                       {"#d45500ff",0.77}})
+cpu_circle:buttons (awful.util.table.join (
           awful.button ({}, 3, function()
             awful.util.spawn("lxtask", false)
-          end)  ))
-batbar.tooltip = awful.tooltip({ objects = { batbar } })
-baticon.tooltip = awful.tooltip({ objects = { baticon } })
-batmargin = wibox.layout.margin(batbar, 2, 7)
-batmargin:set_top(7)
-batmargin:set_bottom(7)
-batupd = lain.widgets.bat({
-    settings = function()
-        if bat_now.perc == "N/A" then
-            bat_perc = 100
-            batbar.tooltip:set_text (" no battery present ")
-            --baticon:set_image(beautiful.ac)
-        elseif bat_now.status == "Discharging" then
-            bat_perc = tonumber(bat_now.perc)
-            batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... discharging")
-            baticon.tooltip:set_text (" " .. bat_now.perc .. " % ... discharging")
-            baticon:set_image(beautiful.xx)
-            --if bat_perc >= 97 then
-              --  batbar:set_color(green)
-            --elseif bat_perc > 60 then
-              --  batbar:set_color(beautiful.fg_normal)
-                --baticon:set_image(beautiful.bat)
-            --elseif bat_perc > 30 then
-              --  batbar:set_color(yellow)
-                --baticon:set_image(beautiful.bat)
-            --elseif bat_perc > 15 then
-              --  batbar:set_color(orange)
-               -- baticon:set_image(beautiful.bat_low)
-            --else
-              --  batbar:set_color(red)
-               -- baticon:set_image(beautiful.bat_no)
-            if bat_perc == 0 then -- before 0 vol_no; 0-50 vol_low; 50-96 vol
-        baticon:set_image(beautiful.bat_000)
-    elseif bat_perc <= 2.5 then
-        baticon:set_image(beautiful.bat_001)
- elseif bat_perc <= 5 then
-        baticon:set_image(beautiful.bat_002)
- elseif bat_perc <= 7.5 then
-        baticon:set_image(beautiful.bat_003)
- elseif bat_perc <= 10 then
-        baticon:set_image(beautiful.bat_004)
- elseif bat_perc <= 12.5 then
-        baticon:set_image(beautiful.bat_005)
- elseif bat_perc <= 15 then
-        baticon:set_image(beautiful.bat_006)
- elseif bat_perc <= 17.5 then
-        baticon:set_image(beautiful.bat_007)
- elseif bat_perc <= 20 then
-        baticon:set_image(beautiful.bat_008)
- elseif bat_perc <= 22.5 then
-        baticon:set_image(beautiful.bat_009)
- elseif bat_perc <= 25 then
-        baticon:set_image(beautiful.bat_010)
- elseif bat_perc <= 27.5 then
-        baticon:set_image(beautiful.bat_011)
- elseif bat_perc <= 30 then
-        baticon:set_image(beautiful.bat_012)
- elseif bat_perc <= 32.5 then
-        baticon:set_image(beautiful.bat_013)
- elseif bat_perc <= 35 then
-        baticon:set_image(beautiful.bat_014)
- elseif bat_perc <= 37.5 then
-        baticon:set_image(beautiful.bat_015)
- elseif bat_perc <= 40 then
-        baticon:set_image(beautiful.bat_016)
- elseif bat_perc <= 42.5 then
-        baticon:set_image(beautiful.bat_017)
- elseif bat_perc <= 45 then
-        baticon:set_image(beautiful.bat_018)
- elseif bat_perc <= 47.5 then
-        baticon:set_image(beautiful.bat_019)
- elseif bat_perc <= 50 then
-        baticon:set_image(beautiful.bat_020)
- elseif bat_perc <= 52.5 then
-        baticon:set_image(beautiful.bat_021)
- elseif bat_perc <= 55 then
-        baticon:set_image(beautiful.bat_022)
- elseif bat_perc <= 57.5 then
-        baticon:set_image(beautiful.bat_023)
- elseif bat_perc <= 60 then
-        baticon:set_image(beautiful.bat_024)
- elseif bat_perc <= 62.5 then
-        baticon:set_image(beautiful.bat_025)
- elseif bat_perc <= 65 then
-        baticon:set_image(beautiful.bat_026)
- elseif bat_perc <= 67.5 then
-        baticon:set_image(beautiful.bat_027)
- elseif bat_perc <= 70 then
-        baticon:set_image(beautiful.bat_028)
- elseif bat_perc <= 72.5 then
-        baticon:set_image(beautiful.bat_029)
- elseif bat_perc <= 75 then
-        baticon:set_image(beautiful.bat_030)
- elseif bat_perc <= 77.5 then
-        baticon:set_image(beautiful.bat_031)
- elseif bat_perc <= 80 then
-        baticon:set_image(beautiful.bat_032)
- elseif bat_perc <= 82.5 then
-        baticon:set_image(beautiful.bat_033)
- elseif bat_perc <= 85 then
-        baticon:set_image(beautiful.bat_034)
- elseif bat_perc <= 87.5 then
-        baticon:set_image(beautiful.bat_035)
- elseif bat_perc <= 90 then
-        baticon:set_image(beautiful.bat_036)
- elseif bat_perc <= 92.5 then
-        baticon:set_image(beautiful.bat_037)
- elseif bat_perc <= 95 then
-        baticon:set_image(beautiful.bat_038)
- elseif bat_perc <= 97.5 then
-        baticon:set_image(beautiful.bat_039)
-    else
-        baticon:set_image(beautiful.bat_040)
-            
-            
-            end
-        else
-			bat_perc = tonumber(bat_now.perc)
-			batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... charging")
-			baticon.tooltip:set_text (" " .. bat_now.perc .. " % ... charging")
-            baticon:set_image(beautiful.bat)
-            --if bat_perc >= 97 then
-              --  batbar:set_color(green)
-                --batbar.tooltip:set_text (" " .. bat_now.perc .. " % ... fully charged")
-            --elseif bat_perc > 60 then
-              --  batbar:set_color(beautiful.fg_normal)
-                --baticon:set_image(beautiful.bat)
-            --elseif bat_perc > 30 then
-              --  batbar:set_color(yellow)
-                --baticon:set_image(beautiful.bat)
-            --elseif bat_perc > 15 then
-              --  batbar:set_color(orange)
-               -- baticon:set_image(beautiful.bat_low)
-            --else
-              --  batbar:set_color(red)
-               -- baticon:set_image(beautiful.bat_no)
-                        if bat_perc == 0 then -- before 0 vol_no; 0-50 vol_low; 50-96 vol
-        baticon:set_image(beautiful.bat_000)
-    elseif bat_perc <= 2.5 then
-        baticon:set_image(beautiful.bat_001)
- elseif bat_perc <= 5 then
-        baticon:set_image(beautiful.bat_002)
- elseif bat_perc <= 7.5 then
-        baticon:set_image(beautiful.bat_003)
- elseif bat_perc <= 10 then
-        baticon:set_image(beautiful.bat_004)
- elseif bat_perc <= 12.5 then
-        baticon:set_image(beautiful.bat_005)
- elseif bat_perc <= 15 then
-        baticon:set_image(beautiful.bat_006)
- elseif bat_perc <= 17.5 then
-        baticon:set_image(beautiful.bat_007)
- elseif bat_perc <= 20 then
-        baticon:set_image(beautiful.bat_008)
- elseif bat_perc <= 22.5 then
-        baticon:set_image(beautiful.bat_009)
- elseif bat_perc <= 25 then
-        baticon:set_image(beautiful.bat_010)
- elseif bat_perc <= 27.5 then
-        baticon:set_image(beautiful.bat_011)
- elseif bat_perc <= 30 then
-        baticon:set_image(beautiful.bat_012)
- elseif bat_perc <= 32.5 then
-        baticon:set_image(beautiful.bat_013)
- elseif bat_perc <= 35 then
-        baticon:set_image(beautiful.bat_014)
- elseif bat_perc <= 37.5 then
-        baticon:set_image(beautiful.bat_015)
- elseif bat_perc <= 40 then
-        baticon:set_image(beautiful.bat_016)
- elseif bat_perc <= 42.5 then
-        baticon:set_image(beautiful.bat_017)
- elseif bat_perc <= 45 then
-        baticon:set_image(beautiful.bat_018)
- elseif bat_perc <= 47.5 then
-        baticon:set_image(beautiful.bat_019)
- elseif bat_perc <= 50 then
-        baticon:set_image(beautiful.bat_020)
- elseif bat_perc <= 52.5 then
-        baticon:set_image(beautiful.bat_021)
- elseif bat_perc <= 55 then
-        baticon:set_image(beautiful.bat_022)
- elseif bat_perc <= 57.5 then
-        baticon:set_image(beautiful.bat_023)
- elseif bat_perc <= 60 then
-        baticon:set_image(beautiful.bat_024)
- elseif bat_perc <= 62.5 then
-        baticon:set_image(beautiful.bat_025)
- elseif bat_perc <= 65 then
-        baticon:set_image(beautiful.bat_026)
- elseif bat_perc <= 67.5 then
-        baticon:set_image(beautiful.bat_027)
- elseif bat_perc <= 70 then
-        baticon:set_image(beautiful.bat_028)
- elseif bat_perc <= 72.5 then
-        baticon:set_image(beautiful.bat_029)
- elseif bat_perc <= 75 then
-        baticon:set_image(beautiful.bat_030)
- elseif bat_perc <= 77.5 then
-        baticon:set_image(beautiful.bat_031)
- elseif bat_perc <= 80 then
-        baticon:set_image(beautiful.bat_032)
- elseif bat_perc <= 82.5 then
-        baticon:set_image(beautiful.bat_033)
- elseif bat_perc <= 85 then
-        baticon:set_image(beautiful.bat_034)
- elseif bat_perc <= 87.5 then
-        baticon:set_image(beautiful.bat_035)
- elseif bat_perc <= 90 then
-        baticon:set_image(beautiful.bat_036)
- elseif bat_perc <= 92.5 then
-        baticon:set_image(beautiful.bat_037)
- elseif bat_perc <= 95 then
-        baticon:set_image(beautiful.bat_038)
- elseif bat_perc <= 97.5 then
-        baticon:set_image(beautiful.bat_039)
-    else
-        baticon:set_image(beautiful.bat_040)            
-            end
-        
-        end
-        batbar:set_value(bat_perc / 100)
-    end
-})
-batwidget = wibox.widget.background(batmargin)
-batwidget:set_bgimage(beautiful.batwidget_bg)
---}}
-			     
--- # ALSA volume bar {{
-volicon = wibox.widget.imagebox(beautiful.vol)
-    volicon:buttons (awful.util.table.join (
+          end)  )
+    )
+--set the value directly
+--cpu_circle:add_value(0.5)
+--or use vicious
+blabla = lain.widgets.cpu({})
+vicious.register(cpu_circle, vicious.widgets.cpu,'$1',2) -- second number is timeout
+cpu_circle.tooltip = awful.tooltip({ objects = { cpu_circle } })
+cpu_circle.tooltip:set_text (nbcpu)
+
+--}}}
+
+
+
+
+-- {{{ Volume Widget - pure lua
+volume = lain.widgets.alsabar({})
+vol_circle = blingbling.wlourf_circle_graph({radius= 7, height = 18, width = 36, show_text = true, label = "", h_margin = 4, v_margin = 0 --[[, font = {family = "Times New Roman", slang = "italic", weight = "bold"}]]})
+--vol_circle:set_graph_colors({{"#00eeddff",0}, --all value > 0 will be displayed using this color
+--                       {"#d4aa00ff", 0.5},
+--                       {"#d45500ff",0.77}})
+
+    vol_circle:buttons (awful.util.table.join (
           awful.button ({}, 3, function()
             awful.util.spawn(lain.widgets.alsabar.mixer, false)
             --awful.util.spawn ("pavucontrol", false)
@@ -496,120 +267,84 @@ volicon = wibox.widget.imagebox(beautiful.vol)
             --volume.notify()
           end)
     ))
-volicon.tooltip = awful.tooltip({ objects = { volicon } })
-volume = lain.widgets.alsabar({
-vertical = false,
-width = 40, --55,
-ticks = true, 
-ticks_size = 5, --6,
-timeout = 0.1,
-settings = function()
-    if volume_now.status == "off" then
-        volicon:set_image(beautiful.c_mute)
-    elseif volume_now.level == 0 then -- before 0 vol_no; 0-50 vol_low; 50-96 vol
-        volicon:set_image(beautiful.c_000)
-    elseif volume_now.level <= 2.5 then
-        volicon:set_image(beautiful.c_001)
- elseif volume_now.level <= 5 then
-        volicon:set_image(beautiful.c_002)
- elseif volume_now.level <= 7.5 then
-        volicon:set_image(beautiful.c_003)
- elseif volume_now.level <= 10 then
-        volicon:set_image(beautiful.c_004)
- elseif volume_now.level <= 12.5 then
-        volicon:set_image(beautiful.c_005)
- elseif volume_now.level <= 15 then
-        volicon:set_image(beautiful.c_006)
- elseif volume_now.level <= 17.5 then
-        volicon:set_image(beautiful.c_007)
- elseif volume_now.level <= 20 then
-        volicon:set_image(beautiful.c_008)
- elseif volume_now.level <= 22.5 then
-        volicon:set_image(beautiful.c_009)
- elseif volume_now.level <= 25 then
-        volicon:set_image(beautiful.c_010)
- elseif volume_now.level <= 27.5 then
-        volicon:set_image(beautiful.c_011)
- elseif volume_now.level <= 30 then
-        volicon:set_image(beautiful.c_012)
- elseif volume_now.level <= 32.5 then
-        volicon:set_image(beautiful.c_013)
- elseif volume_now.level <= 35 then
-        volicon:set_image(beautiful.c_014)
- elseif volume_now.level <= 37.5 then
-        volicon:set_image(beautiful.c_015)
- elseif volume_now.level <= 40 then
-        volicon:set_image(beautiful.c_016)
- elseif volume_now.level <= 42.5 then
-        volicon:set_image(beautiful.c_017)
- elseif volume_now.level <= 45 then
-        volicon:set_image(beautiful.c_018)
- elseif volume_now.level <= 47.5 then
-        volicon:set_image(beautiful.c_019)
- elseif volume_now.level <= 50 then
-        volicon:set_image(beautiful.c_020)
- elseif volume_now.level <= 52.5 then
-        volicon:set_image(beautiful.c_021)
- elseif volume_now.level <= 55 then
-        volicon:set_image(beautiful.c_022)
- elseif volume_now.level <= 57.5 then
-        volicon:set_image(beautiful.c_023)
- elseif volume_now.level <= 60 then
-        volicon:set_image(beautiful.c_024)
- elseif volume_now.level <= 62.5 then
-        volicon:set_image(beautiful.c_025)
- elseif volume_now.level <= 65 then
-        volicon:set_image(beautiful.c_026)
- elseif volume_now.level <= 67.5 then
-        volicon:set_image(beautiful.c_027)
- elseif volume_now.level <= 70 then
-        volicon:set_image(beautiful.c_028)
- elseif volume_now.level <= 72.5 then
-        volicon:set_image(beautiful.c_029)
- elseif volume_now.level <= 75 then
-        volicon:set_image(beautiful.c_030)
- elseif volume_now.level <= 77.5 then
-        volicon:set_image(beautiful.c_031)
- elseif volume_now.level <= 80 then
-        volicon:set_image(beautiful.c_032)
- elseif volume_now.level <= 82.5 then
-        volicon:set_image(beautiful.c_033)
- elseif volume_now.level <= 85 then
-        volicon:set_image(beautiful.c_034)
- elseif volume_now.level <= 87.5 then
-        volicon:set_image(beautiful.c_035)
- elseif volume_now.level <= 90 then
-        volicon:set_image(beautiful.c_036)
- elseif volume_now.level <= 92.5 then
-        volicon:set_image(beautiful.c_037)
- elseif volume_now.level <= 95 then
-        volicon:set_image(beautiful.c_038)
- elseif volume_now.level <= 97.5 then
-        volicon:set_image(beautiful.c_039)
-    else
-        volicon:set_image(beautiful.c_040)
-    end
-    if volume_now.status == "off" then
-	volicon.tooltip:set_text ("Master: " .. volume_now.level .. "% [Muted]")
+    
+vol_circle.tooltip = awful.tooltip({ objects = { vol_circle } })
+
+--set the value directly
+vol_timer = timer({ timeout = 0.1 })
+vol_timer:connect_signal("timeout", function() 
+		vol_circle:add_value(volume_now.level/100) 
+		 if volume_now.status == "off" then
+	vol_circle.tooltip:set_text ("Master: " .. volume_now.level .. "% [Muted]")
+	vol_circle:set_graph_colors({{"#E82F2F",0}})
 	else
-	volicon.tooltip:set_text ("Master: " .. volume_now.level .. "% ")
+	vol_circle.tooltip:set_text ("Master: " .. volume_now.level .. "% ")
+	vol_circle:set_graph_colors({{"#00eeddff",0}, --all value > 0 will be displayed using this color
+                       {"#d4aa00ff", 0.5},
+                       {"#d45500ff",0.77}})
     end
-   end,
-colors =
-{
-    background = beautiful.bg_normal,
-    mute = red,
-    unmute = beautiful.fg_normal
-}})
-volmargin = wibox.layout.margin(volume.bar, 2, 7)
-volmargin:set_top(6)
-volmargin:set_bottom(6)
-volumewidget = wibox.widget.background(volmargin)
-volumewidget:set_bgimage(beautiful.widget_bg)
---}}
+		end)
+vol_timer:start()
+
+--or use vicious
+--vicious.register(circle, vicious.widgets.cpu,'$1',2)
+--}}}
+
+
+
+
+-- {{{ Battery Widget - pure lua
+
+bat_circle = blingbling.wlourf_circle_graph({radius= 7, height = 18, width = 36, show_text = true, label = "", h_margin = 4, v_margin = 0 --[[, font = {family = "Times New Roman", slang = "italic", weight = "bold"}]]})
+--    bat_circle:buttons (awful.util.table.join (
+--          awful.button ({}, 3, function()
+--            awful.util.spawn("lxtask", false)
+--          end)  )
+--    )
+
+bat_circle.tooltip = awful.tooltip({ objects = { bat_circle } })
+
+--set the value directly
+batupd = lain.widgets.bat({
+    settings = function()
+            bat_perc = bat_now.perc
+            end
+})
+bat_timer = timer({ timeout = 2 })
+bat_timer:connect_signal("timeout", function() 
+		bat_circle:add_value(bat_perc/100) 
+		if bat_now.perc == "N/A" then
+            bat_perc = 100
+            batbar.tooltip:set_text (" no battery present ")
+				bat_circle:set_graph_colors({{"#E82F2F",0}})
+		elseif bat_now.status == "Discharging" then
+            bat_perc = tonumber(bat_now.perc)
+            bat_circle.tooltip:set_text (" " .. bat_now.perc .. " % ... discharging")
+            bat_circle:set_graph_colors({
+						{"#E82F2F",0}, --all value > 0 will be displayed using this color
+						{"#d4aa00", 0.15},
+						{"#BFBFBF",0.30},
+						{"#2FE86D",0.96}})
+        else
+			bat_perc = tonumber(bat_now.perc)
+			bat_circle.tooltip:set_text (" " .. bat_now.perc .. " % ... charging")
+			bat_circle:set_graph_colors({
+						{"#E82F2F",0}, --all value > 0 will be displayed using this color
+						{"#2FE86D", 0.10}})
+						end
+		end)
+bat_timer:start()
+
+--or use vicious
+--vicious.register(circle, vicious.widgets.cpu,'$1',2)
+--}}}
+
+
+
 
 -- # Separators
-first = wibox.widget.textbox('<span font="Helvetica Neue 10"> </span>')
+first = wibox.widget.textbox('<span font="Monospace 10"> </span>')
+--spacer = wibox.widget.textbox('<span font="Monospace 10">              </span>')
 arrl_pre = wibox.widget.imagebox()
 arrl_pre:set_image(beautiful.arrl_lr_pre)
 arrl_pre_light = wibox.widget.imagebox()
@@ -619,10 +354,18 @@ arrl_post:set_image(beautiful.arrl_lr_post)
 arrl_post_light = wibox.widget.imagebox()
 arrl_post_light:set_image(beautiful.arrl_lr_post_light)
 
+tray_spacer = wibox.widget.imagebox()
+tray_spacer:set_image(beautiful.tray_spacer)
+
+spacer = wibox.widget.imagebox()
+spacer:set_image(beautiful.spacer)
+
+
 --############################################DONT TOUCH##########################################
 
 -- Create a wibox for each screen and add it
 mywibox = {}
+--mywibox_wsp = {}
 mypromptbox = {}
 mylayoutbox = {}
 mytaglist = {}
@@ -690,78 +433,60 @@ for s = 1, screen.count() do
     -- Create a tasklist widget
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
---#############################################WIDGETS IN WIBOX##################################################
-
     -- Create the wibox
     mywibox[s] = awful.wibox({ position = "top", height = "20", screen = s, border_width = 0})
+--    mywibox_wsp[s] = awful.wibox({ position = "bottom", height = "80", screen = s, border_width = 0})
   
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
-	--left_layout:add(first)
-	--left_layout:add(first)
-	left_layout:add(first)
-	--left_layout:add(mylauncher)
-	--left_layout:add(first)
+    left_layout:add(spacer)
     left_layout:add(mytaglist[s])
+    --left_layout:add(mylaunchbar)
     left_layout:add(mypromptbox[s])
-    
-    --left_layout:add(arrl_pre)
-    --left_layout:add(mylayoutbox[s])
-    --left_layout:add(arrl_post)
-    left_layout:add(first)
+    left_layout:add(spacer)
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-	right_layout:add(first)
-	right_layout:add(arrl_pre_light)
-    --if s == 1 then right_layout:add(systray()) end
-    	if s == 1 then right_layout:add(wibox.widget.systray()) end
-	
-    right_layout:add(arrl_post_light)
-    right_layout:add(first)
-    right_layout:add(volicon)
-    --right_layout:add(volumewidget)
-    right_layout:add(first)
-    --right_layout:add(batwidget)
-    right_layout:add(baticon)
+    right_layout:add(tray_spacer)
+	--right_layout:add(arrl_pre)
+    ----if s == 1 then right_layout:add(systray()) end
+    --	if s == 1 then right_layout:add(wibox.widget.systray()) end
+	--right_layout:add(arrl_post)
     right_layout:add(mylayoutbox[s])
-    right_layout:add(first)
+    right_layout:add(spacer)
+    --right_layout:add(volicon)
+    right_layout:add(vol_circle)
+    --right_layout:add(volumewidget)
+    --right_layout:add(batwidget)
+    --right_layout:add(baticon)
+    right_layout:add(bat_circle)
+    right_layout:add(cpu_circle)
+    right_layout:add(spacer)
     --right_layout:add(mytaglist[s])
     right_layout:add(mytextclock)
 	right_layout:add(mylauncher)
-
-    -- right_layout:add(alsawidget.bar) -- This is the old Alsa Widget; can be placed vertically
-    --right_layout:add(arrl_pre)
-    --right_layout:add(arrl_post)
-    --right_layout:add(arrl_pre_light)
-    --right_layout:add(wibox.widget.systray())
-    --right_layout:add(arrl_post_light)
-    --right_layout:add(APW)
-    --right_layout:add(clockicon)
-    --right_layout:add(mylayoutbox[s]) -- tiling & floating options
-
+	
     -- Now bring it all together (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()
     layout:set_left(left_layout)
     layout:set_middle(mytasklist[s])
     layout:set_right(right_layout)
-    
-    --local systray_margin = wibox.layout.margin()
-    --systray_margin:set_margins(1)
-    --systray_margin:set_widget(layout)
+
+	local layout_wsp = wibox.layout.align.horizontal()
+	layout_wsp:set_left(mytaglist[s])
 
     mywibox[s]:set_widget(layout)
+--    mywibox_wsp[s]:set_widget(layout_wsp)
+--    mywibox_wsp[mouse.screen].visible=false
 end
 -- }}}
 
---###############################################KEY BINDINGS###################################################
-
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
-		awful.button({ }, 3, function () mymainmenu:toggle() end),
-		awful.button({ }, 4, awful.tag.viewnext),
-		awful.button({ }, 5, awful.tag.viewprev)
-				  ))
+    awful.button({ }, 3, function () mymainmenu:toggle() end),
+    awful.button({ }, 4, awful.tag.viewnext),
+    awful.button({ }, 5, awful.tag.viewprev)
+))
 -- }}}
 
 -- {{{ Key bindings
@@ -884,6 +609,21 @@ globalkeys = awful.util.table.join(
             volume.update()
             volume.notify()
         end),
+        
+-- ALT+Tab
+
+awful.key({ "Mod1",           }, "Tab",                                                      
+       function ()                                                                              
+          alttab.switch(1, "Alt_L", "Tab", "ISO_Left_Tab")                                             
+       end                                                                                      
+   ),                                                                                           
+                                                                                                
+   awful.key({ "Mod1", "Shift"   }, "Tab",                                                      
+       function ()                                                                              
+          alttab.switch(-1, "Alt_L", "Tab", "ISO_Left_Tab")                                            
+       end                                                                                      
+   ),
+
 
 -- # Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
@@ -902,6 +642,7 @@ globalkeys = awful.util.table.join(
 -- # Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
+    awful.key({ modkey, "Control" }, "r", function () awful.util.spawn("pkill stalonetray") end),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end),
@@ -935,7 +676,7 @@ clientkeys = awful.util.table.join(
 -- # toggle titlebar/wibox
 	awful.key({ modkey, "Shift" }, "t", awful.titlebar.toggle),
 	awful.key({ }, "Menu", function ()
-		mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible
+		mywibox_wsp[mouse.screen].visible = not mywibox_wsp[mouse.screen].visible
 		end),
 
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
@@ -1013,14 +754,12 @@ clientbuttons = awful.util.table.join(
 root.keys(globalkeys)
 -- }}}
 
---###############################################RULES######################################################
-
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
     -- All clients will match this rule.
     { rule = { },
-      properties = { border_width = beautiful.border_width,
+properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
                      raise = true,
@@ -1052,6 +791,16 @@ awful.rules.rules = {
    }
 -- }}}
 
+
+--  if mouse.coords ().y > 3 and mouse.coords ().x > 3 then
+--       mywibox_wsp[mouse.screen].visible=false
+--    else
+--       mywibox_wsp[mouse.screen].visible=true
+--    end
+
+
+
+
 --#################################################DONT TOUCH####################################################
 
 -- {{{ Signals
@@ -1077,7 +826,7 @@ client.connect_signal("manage", function (c, startup)
         end
     end
 
-    local titlebars_enabled = true
+    local titlebars_enabled = false
     if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
         -- buttons for the titlebar
         local buttons = awful.util.table.join(
@@ -1120,20 +869,9 @@ client.connect_signal("manage", function (c, startup)
         layout:set_middle(middle_layout)
 
         awful.titlebar(c):set_widget(layout)
---	awful.titlebar.hide(c)
-       
--- show titlebar only on specific tags
-       
-        local tagName = awful.tag.selected(1).name
-		if tagName == "float" then 
-		awful.titlebar.show(c)
-		else
-		awful.titlebar.hide(c)
-		end
     end
 end)
 
-client.connect_signal("focus", function(c) c.border_color = 
-beautiful.border_focus end)
+client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
